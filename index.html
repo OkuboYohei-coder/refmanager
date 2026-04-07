@@ -7,179 +7,142 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #f7f5f0;
-  --surface: #ffffff;
-  --surface2: #f0ede6;
-  --border: #e0dbd0;
-  --border2: #ccc8bc;
-  --text: #1a1814;
-  --text2: #6b6659;
-  --text3: #a09d93;
-  --accent: #2d4a3e;
-  --accent2: #4a7c6a;
-  --accent-light: #e8f0ec;
-  --danger: #8b2f2f;
-  --danger-light: #f5eded;
-  --tag1-bg: #e8f0ec; --tag1: #2d4a3e;
-  --tag2-bg: #f0e8e0; --tag2: #6b3d1e;
-  --tag3-bg: #e8e8f0; --tag3: #2d2d4a;
-  --radius: 6px;
-  --radius-lg: 10px;
-  --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.04);
+  --bg:#f7f5f0;--surface:#ffffff;--border:#e0dbd0;--border2:#ccc8bc;
+  --text:#1a1814;--text2:#6b6659;--text3:#a09d93;
+  --accent:#2d4a3e;--accent2:#4a7c6a;--accent-light:#e8f0ec;
+  --danger:#8b2f2f;--danger-light:#f5eded;
+  --tag1-bg:#e8f0ec;--tag1:#2d4a3e;--tag2-bg:#f0e8e0;--tag2:#6b3d1e;--tag3-bg:#e8e8f0;--tag3:#2d2d4a;
+  --radius:6px;--radius-lg:10px;--shadow:0 1px 3px rgba(0,0,0,.08),0 4px 16px rgba(0,0,0,.04);
 }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); font-size: 14px; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);font-size:14px;height:100vh;overflow:hidden;display:flex;flex-direction:column;}
 
-/* Setup overlay */
-.setup-overlay {
-  position: fixed; inset: 0; background: rgba(26,24,20,0.6);
-  display: flex; align-items: center; justify-content: center; z-index: 9000;
-}
-.setup-card {
-  background: var(--surface); border-radius: var(--radius-lg);
-  padding: 32px 36px; width: 520px; max-width: 95vw;
-  box-shadow: 0 8px 40px rgba(0,0,0,0.18);
-}
-.setup-title { font-family: 'DM Serif Display', serif; font-size: 22px; margin-bottom: 6px; }
-.setup-sub { font-size: 13px; color: var(--text2); margin-bottom: 24px; line-height: 1.6; }
-.setup-field { margin-bottom: 14px; }
-.setup-label { font-size: 12px; font-weight: 500; color: var(--text2); margin-bottom: 5px; display: block; }
-.setup-input {
-  width: 100%; padding: 9px 12px; border: 1px solid var(--border);
-  border-radius: var(--radius); font-size: 13px; font-family: 'JetBrains Mono', monospace;
-  background: var(--bg); color: var(--text); outline: none;
-}
-.setup-input:focus { border-color: var(--accent2); }
-.setup-actions { display: flex; gap: 10px; margin-top: 20px; }
-.setup-hint { font-size: 11.5px; color: var(--text3); margin-top: 14px; line-height: 1.6; }
-.setup-hint a { color: var(--accent2); }
+.setup-overlay{position:fixed;inset:0;background:rgba(26,24,20,.6);display:flex;align-items:center;justify-content:center;z-index:9000;}
+.setup-card{background:var(--surface);border-radius:var(--radius-lg);padding:32px 36px;width:520px;max-width:95vw;box-shadow:0 8px 40px rgba(0,0,0,.18);}
+.setup-title{font-family:'DM Serif Display',serif;font-size:22px;margin-bottom:6px;}
+.setup-sub{font-size:13px;color:var(--text2);margin-bottom:24px;line-height:1.6;}
+.setup-field{margin-bottom:14px;}
+.setup-label{font-size:12px;font-weight:500;color:var(--text2);margin-bottom:5px;display:block;}
+.setup-input{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:var(--radius);font-size:13px;font-family:'JetBrains Mono',monospace;background:var(--bg);color:var(--text);outline:none;}
+.setup-input:focus{border-color:var(--accent2);}
+.setup-actions{display:flex;gap:10px;margin-top:20px;}
+.setup-hint{font-size:11.5px;color:var(--text3);margin-top:14px;line-height:1.7;}
+.setup-hint code{font-family:monospace;background:var(--bg);padding:1px 5px;border-radius:3px;font-size:10.5px;}
 
-/* Header */
-.header {
-  background: var(--accent); color: #fff;
-  padding: 0 24px; height: 52px;
-  display: flex; align-items: center; gap: 16px; flex-shrink: 0;
-}
-.header-title { font-family: 'DM Serif Display', serif; font-size: 18px; letter-spacing: 0.02em; flex: 1; }
-.header-status { font-size: 11px; opacity: 0.7; display: flex; align-items: center; gap: 6px; }
-.status-dot { width: 7px; height: 7px; border-radius: 50%; background: #6fcf97; flex-shrink: 0; }
-.status-dot.offline { background: #eb5757; }
-.status-dot.syncing { background: #f2c94c; animation: pulse 1s infinite; }
-@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+.header{background:var(--accent);color:#fff;padding:0 24px;height:52px;display:flex;align-items:center;gap:12px;flex-shrink:0;}
+.header-title{font-family:'DM Serif Display',serif;font-size:18px;letter-spacing:.02em;flex:1;}
+.header-status{font-size:11px;opacity:.7;display:flex;align-items:center;gap:6px;}
+.status-dot{width:7px;height:7px;border-radius:50%;background:#6fcf97;flex-shrink:0;}
+.status-dot.offline{background:#eb5757;}.status-dot.syncing{background:#f2c94c;animation:pulse 1s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 
-/* Layout */
-.app { display: flex; flex: 1; overflow: hidden; }
-.sidebar { width: 280px; min-width: 280px; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; }
-.sidebar-search { padding: 14px; border-bottom: 1px solid var(--border); }
-.search-input { width: 100%; padding: 8px 12px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); font-size: 13px; font-family: 'DM Sans', sans-serif; color: var(--text); outline: none; transition: border-color 0.15s; }
-.search-input:focus { border-color: var(--accent2); }
-.ref-list { flex: 1; overflow-y: auto; padding: 8px; }
-.ref-item { padding: 11px 13px; border-radius: var(--radius); cursor: pointer; margin-bottom: 3px; border: 1px solid transparent; transition: all 0.12s; }
-.ref-item:hover { background: var(--bg); border-color: var(--border); }
-.ref-item.active { background: var(--accent-light); border-color: var(--accent2); }
-.ref-item-title { font-size: 13px; font-weight: 500; line-height: 1.4; margin-bottom: 3px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.ref-item-meta { font-size: 11px; color: var(--text3); }
-.ref-item-tags { display: flex; gap: 4px; margin-top: 5px; flex-wrap: wrap; }
-.tag { font-size: 10px; padding: 2px 7px; border-radius: 20px; font-weight: 500; }
-.tag-0 { background: var(--tag1-bg); color: var(--tag1); }
-.tag-1 { background: var(--tag2-bg); color: var(--tag2); }
-.tag-2 { background: var(--tag3-bg); color: var(--tag3); }
-.sidebar-footer { padding: 12px; border-top: 1px solid var(--border); display: flex; gap: 8px; }
+.app{display:flex;flex:1;overflow:hidden;}
+.sidebar{width:280px;min-width:280px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;}
+.sidebar-search{padding:14px;border-bottom:1px solid var(--border);}
+.search-input{width:100%;padding:8px 12px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);font-size:13px;font-family:'DM Sans',sans-serif;color:var(--text);outline:none;}
+.search-input:focus{border-color:var(--accent2);}
+.ref-list{flex:1;overflow-y:auto;padding:8px;}
+.ref-item{padding:11px 13px;border-radius:var(--radius);cursor:pointer;margin-bottom:3px;border:1px solid transparent;transition:all .12s;}
+.ref-item:hover{background:var(--bg);border-color:var(--border);}
+.ref-item.active{background:var(--accent-light);border-color:var(--accent2);}
+.ref-item-title{font-size:13px;font-weight:500;line-height:1.4;margin-bottom:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.ref-item-meta{font-size:11px;color:var(--text3);}
+.ref-item-tags{display:flex;gap:4px;margin-top:5px;flex-wrap:wrap;}
+.tag{font-size:10px;padding:2px 7px;border-radius:20px;font-weight:500;}
+.tag-0{background:var(--tag1-bg);color:var(--tag1);}.tag-1{background:var(--tag2-bg);color:var(--tag2);}.tag-2{background:var(--tag3-bg);color:var(--tag3);}
+.sidebar-footer{padding:12px;border-top:1px solid var(--border);display:flex;gap:6px;}
 
-/* Buttons */
-.btn { padding: 8px 16px; border-radius: var(--radius); border: 1px solid var(--border2); font-size: 13px; cursor: pointer; background: var(--surface); color: var(--text); font-family: 'DM Sans', sans-serif; font-weight: 400; transition: all 0.12s; white-space: nowrap; }
-.btn:hover { background: var(--bg); }
-.btn:disabled { opacity: 0.5; cursor: not-allowed; }
-.btn-primary { background: var(--accent); color: #fff; border-color: transparent; }
-.btn-primary:hover { background: var(--accent2); }
-.btn-danger { color: var(--danger); }
-.btn-danger:hover { background: var(--danger-light); border-color: var(--danger); }
-.btn-sm { padding: 5px 12px; font-size: 12px; }
+.btn{padding:8px 16px;border-radius:var(--radius);border:1px solid var(--border2);font-size:13px;cursor:pointer;background:var(--surface);color:var(--text);font-family:'DM Sans',sans-serif;transition:all .12s;white-space:nowrap;}
+.btn:hover{background:var(--bg);}.btn:disabled{opacity:.5;cursor:not-allowed;}
+.btn-primary{background:var(--accent);color:#fff;border-color:transparent;}.btn-primary:hover{background:var(--accent2);}
+.btn-danger{color:var(--danger);}.btn-danger:hover{background:var(--danger-light);border-color:var(--danger);}
+.btn-sm{padding:5px 12px;font-size:12px;}
+.btn-teal{background:#1a6b3c;color:#fff;border-color:transparent;}.btn-teal:hover{background:#148035;}
 
-/* Main */
-.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-.welcome { flex: 1; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 12px; color: var(--text3); }
-.welcome-icon { font-family: 'DM Serif Display', serif; font-size: 48px; color: var(--border2); line-height: 1; }
-.editor { display: none; height: 100%; flex-direction: column; }
-.toolbar { padding: 13px 24px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; background: var(--surface); }
-.toolbar-title { font-family: 'DM Serif Display', serif; font-size: 17px; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.tabs { display: flex; background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 24px; }
-.tab { padding: 11px 18px; font-size: 13px; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; color: var(--text2); transition: all 0.12s; }
-.tab:hover { color: var(--text); }
-.tab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 500; }
-.tab-content { flex: 1; overflow-y: auto; background: var(--bg); }
-.tab-panel { display: none; padding: 24px; max-width: 780px; }
-.tab-panel.active { display: block; }
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.welcome{flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;color:var(--text3);}
+.welcome-icon{font-family:'DM Serif Display',serif;font-size:48px;color:var(--border2);line-height:1;}
+.editor{display:none;height:100%;flex-direction:column;}
+.toolbar{padding:13px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;background:var(--surface);}
+.toolbar-title{font-family:'DM Serif Display',serif;font-size:17px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.tabs{display:flex;background:var(--surface);border-bottom:1px solid var(--border);padding:0 20px;}
+.tab{padding:11px 14px;font-size:13px;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;color:var(--text2);transition:all .12s;white-space:nowrap;}
+.tab:hover{color:var(--text);}.tab.active{color:var(--accent);border-bottom-color:var(--accent);font-weight:500;}
+.tab-content{flex:1;overflow-y:auto;background:var(--bg);}
+.tab-panel{display:none;padding:24px;max-width:780px;}.tab-panel.active{display:block;}
 
-/* Form */
-.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px 24px; margin-bottom: 16px; box-shadow: var(--shadow); }
-.card-title { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text3); margin-bottom: 16px; }
-.field-group { margin-bottom: 14px; }
-.field-group:last-child { margin-bottom: 0; }
-.field-label { font-size: 12px; font-weight: 500; color: var(--text2); margin-bottom: 5px; display: block; }
-.field-input { width: 100%; padding: 8px 12px; border: 1px solid var(--border); border-radius: var(--radius); font-size: 13px; font-family: 'DM Sans', sans-serif; background: var(--surface); color: var(--text); line-height: 1.5; outline: none; transition: border-color 0.15s; }
-.field-input:focus { border-color: var(--accent2); }
-textarea.field-input { resize: vertical; min-height: 80px; }
-.row { display: flex; gap: 12px; }
-.row .field-group { flex: 1; }
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px 24px;margin-bottom:16px;box-shadow:var(--shadow);}
+.card-title{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:16px;}
+.field-group{margin-bottom:14px;}.field-group:last-child{margin-bottom:0;}
+.field-label{font-size:12px;font-weight:500;color:var(--text2);margin-bottom:5px;display:block;}
+.field-input{width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:var(--radius);font-size:13px;font-family:'DM Sans',sans-serif;background:var(--surface);color:var(--text);line-height:1.5;outline:none;transition:border-color .15s;}
+.field-input:focus{border-color:var(--accent2);}
+textarea.field-input{resize:vertical;min-height:80px;}
+.row{display:flex;gap:12px;}.row .field-group{flex:1;}
 
-/* Research */
-.info-notice { background: var(--accent-light); border: 1px solid #b8d4c8; border-radius: var(--radius); padding: 11px 14px; font-size: 12.5px; color: var(--accent); line-height: 1.6; margin-bottom: 16px; }
-.prompt-grid { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
-.prompt-btn { display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--text); text-align: left; transition: all 0.12s; box-shadow: var(--shadow); }
-.prompt-btn:hover { border-color: var(--accent2); background: var(--accent-light); color: var(--accent); }
-.prompt-btn-label { flex: 1; }
-.prompt-btn-arrow { font-size: 11px; color: var(--text3); }
-.import-section { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow); }
-.import-header { padding: 12px 16px; background: var(--bg); border-bottom: 1px solid var(--border); font-size: 12px; font-weight: 500; color: var(--text2); }
-.import-body { padding: 14px; }
-.import-hint { font-size: 11.5px; color: var(--text3); margin-bottom: 8px; line-height: 1.5; }
-textarea.import-textarea { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius); font-size: 12px; font-family: 'JetBrains Mono', monospace; background: var(--bg); color: var(--text); resize: vertical; min-height: 100px; outline: none; transition: border-color 0.15s; line-height: 1.6; }
-textarea.import-textarea:focus { border-color: var(--accent2); }
-.import-actions { display: flex; gap: 8px; margin-top: 10px; }
+.info-notice{background:var(--accent-light);border:1px solid #b8d4c8;border-radius:var(--radius);padding:11px 14px;font-size:12.5px;color:var(--accent);line-height:1.6;margin-bottom:16px;}
+.bulk-info{background:#fff8e8;border:1px solid #e8d8a0;border-radius:var(--radius);padding:12px 16px;font-size:12.5px;color:#6b4f00;line-height:1.7;margin-bottom:16px;}
+.prompt-grid{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+.prompt-btn{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--text);text-align:left;transition:all .12s;box-shadow:var(--shadow);}
+.prompt-btn:hover{border-color:var(--accent2);background:var(--accent-light);color:var(--accent);}
+.prompt-btn-label{flex:1;}.prompt-btn-arrow{font-size:11px;color:var(--text3);}
 
-/* Export */
-.export-controls { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px 20px; margin-bottom: 16px; box-shadow: var(--shadow); display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
-.export-label { font-size: 12px; font-weight: 500; color: var(--text2); }
-.format-select { padding: 7px 12px; border: 1px solid var(--border); border-radius: var(--radius); font-size: 13px; font-family: 'DM Sans', sans-serif; background: var(--surface); color: var(--text); outline: none; cursor: pointer; }
-.format-select:focus { border-color: var(--accent2); }
-.export-select-actions { margin-left: auto; display: flex; gap: 6px; }
-.ref-checkboxes { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 16px; box-shadow: var(--shadow); }
-.checkbox-item { display: flex; align-items: center; gap: 10px; padding: 10px 16px; cursor: pointer; border-bottom: 1px solid var(--border); transition: background 0.1s; font-size: 13px; }
-.checkbox-item:last-child { border-bottom: none; }
-.checkbox-item:hover { background: var(--bg); }
-.checkbox-item input[type="checkbox"] { accent-color: var(--accent); cursor: pointer; }
-.output-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
-.output-title { font-size: 13px; font-weight: 500; color: var(--text2); }
-.citation-output { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px 20px; font-size: 13px; font-family: 'JetBrains Mono', monospace; line-height: 1.8; color: var(--text); white-space: pre-wrap; word-break: break-all; min-height: 100px; box-shadow: var(--shadow); }
+.import-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow);}
+.import-header{padding:12px 16px;background:var(--bg);border-bottom:1px solid var(--border);font-size:12px;font-weight:500;color:var(--text2);}
+.import-body{padding:14px;}
+.import-hint{font-size:11.5px;color:var(--text3);margin-bottom:8px;line-height:1.5;}
+textarea.import-textarea{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius);font-size:12px;font-family:'JetBrains Mono',monospace;background:var(--bg);color:var(--text);resize:vertical;min-height:100px;outline:none;line-height:1.6;}
+textarea.import-textarea:focus{border-color:var(--accent2);}
+.import-actions{display:flex;gap:8px;margin-top:10px;}
 
-/* Toast */
-.toast { position: fixed; bottom: 24px; right: 24px; background: var(--accent); color: #fff; padding: 10px 18px; border-radius: var(--radius); font-size: 13px; z-index: 9999; opacity: 0; transform: translateY(8px); transition: all 0.2s; pointer-events: none; box-shadow: 0 4px 16px rgba(0,0,0,0.2); }
-.toast.show { opacity: 1; transform: translateY(0); }
-.empty-state { text-align: center; padding: 32px 16px; color: var(--text3); font-size: 13px; }
+.json-hint{font-size:12px;color:var(--text3);margin-bottom:8px;line-height:1.6;}
+.json-hint code{font-family:monospace;font-size:11px;background:var(--bg);padding:1px 5px;border-radius:3px;}
+textarea.json-textarea{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius);font-size:12px;font-family:'JetBrains Mono',monospace;background:var(--bg);color:var(--text);resize:vertical;min-height:140px;outline:none;line-height:1.6;}
+textarea.json-textarea:focus{border-color:var(--accent2);}
 
-::-webkit-scrollbar { width: 5px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+.bulk-preview{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow);margin-bottom:16px;}
+.bulk-preview-header{padding:12px 16px;background:var(--bg);border-bottom:1px solid var(--border);font-size:12px;font-weight:500;color:var(--text2);display:flex;align-items:center;justify-content:space-between;}
+.bulk-preview-list{max-height:300px;overflow-y:auto;}
+.bulk-ref-row{display:flex;align-items:flex-start;gap:10px;padding:10px 16px;border-bottom:1px solid var(--border);font-size:13px;}
+.bulk-ref-row:last-child{border-bottom:none;}
+.bulk-ref-row input[type=checkbox]{accent-color:var(--accent);margin-top:3px;cursor:pointer;flex-shrink:0;}
+.bulk-ref-info{flex:1;}
+.bulk-ref-title{font-weight:500;line-height:1.4;margin-bottom:2px;}
+.bulk-ref-meta{font-size:11px;color:var(--text3);}
+.bulk-tag-row{display:flex;align-items:center;gap:8px;margin-top:6px;}
+.bulk-tag-label{font-size:11px;color:var(--text3);white-space:nowrap;}
+.bulk-tag-input{flex:1;padding:4px 8px;border:1px solid var(--border);border-radius:var(--radius);font-size:12px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);outline:none;}
+.bulk-tag-input:focus{border-color:var(--accent2);}
+.bulk-actions{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.bulk-count{font-size:12px;color:var(--text3);margin-left:auto;}
 
-/* Mobile */
-@media (max-width: 640px) {
-  .sidebar { width: 100%; position: fixed; bottom: 0; left: 0; right: 0; height: 50vh; z-index: 100; border-right: none; border-top: 1px solid var(--border); display: none; }
-  .sidebar.open { display: flex; }
-  .main { width: 100%; }
-  .tab { padding: 10px 12px; font-size: 12px; }
-  .tab-panel { padding: 16px; }
-  .card { padding: 16px; }
-}
+.progress-bar-wrap{height:4px;background:var(--border);border-radius:2px;margin-bottom:16px;overflow:hidden;display:none;}
+.progress-bar{height:100%;background:var(--accent2);border-radius:2px;transition:width .15s;}
+
+.export-controls{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px 20px;margin-bottom:16px;box-shadow:var(--shadow);display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+.export-label{font-size:12px;font-weight:500;color:var(--text2);}
+.format-select{padding:7px 12px;border:1px solid var(--border);border-radius:var(--radius);font-size:13px;font-family:'DM Sans',sans-serif;background:var(--surface);color:var(--text);outline:none;cursor:pointer;}
+.export-select-actions{margin-left:auto;display:flex;gap:6px;}
+.ref-checkboxes{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:16px;box-shadow:var(--shadow);}
+.checkbox-item{display:flex;align-items:center;gap:10px;padding:10px 16px;cursor:pointer;border-bottom:1px solid var(--border);transition:background .1s;font-size:13px;}
+.checkbox-item:last-child{border-bottom:none;}.checkbox-item:hover{background:var(--bg);}
+.checkbox-item input[type=checkbox]{accent-color:var(--accent);cursor:pointer;}
+.output-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.output-title{font-size:13px;font-weight:500;color:var(--text2);}
+.citation-output{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px 20px;font-size:13px;font-family:'JetBrains Mono',monospace;line-height:1.8;color:var(--text);white-space:pre-wrap;word-break:break-all;min-height:100px;box-shadow:var(--shadow);}
+
+.toast{position:fixed;bottom:24px;right:24px;background:var(--accent);color:#fff;padding:10px 18px;border-radius:var(--radius);font-size:13px;z-index:9999;opacity:0;transform:translateY(8px);transition:all .2s;pointer-events:none;box-shadow:0 4px 16px rgba(0,0,0,.2);}
+.toast.show{opacity:1;transform:translateY(0);}
+.empty-state{text-align:center;padding:32px 16px;color:var(--text3);font-size:13px;}
+::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
 </style>
 </head>
 <body>
 
-<!-- Setup Modal -->
 <div class="setup-overlay" id="setupOverlay">
   <div class="setup-card">
     <div class="setup-title">Supabase 接続設定</div>
-    <div class="setup-sub">SupabaseのProject URLとAnon Keyを入力してください。一度設定するとブラウザに保存されます。</div>
+    <div class="setup-sub">Project URLとAnon Keyを入力してください。一度設定するとブラウザに保存されます。</div>
     <div class="setup-field">
       <label class="setup-label">Project URL</label>
       <input class="setup-input" id="setupUrl" placeholder="https://xxxxxxxxxx.supabase.co" type="url">
@@ -193,9 +156,8 @@ textarea.import-textarea:focus { border-color: var(--accent2); }
       <button class="btn" onclick="useLocalMode()">ローカルモードで使う</button>
     </div>
     <div class="setup-hint">
-      設定方法：<a href="https://supabase.com" target="_blank">supabase.com</a> でプロジェクト作成 →
-      Project Settings → API からURL・Keyを取得。<br>
-      SQLエディタで <code style="font-family:monospace;background:var(--bg);padding:1px 5px;border-radius:3px;">create table references_data (id text primary key, title text, authors text, year text, journal text, volume text, url text, abstract text, citation_text text, notes text, tags text, created_at timestamp default now());</code> を実行してテーブルを作成してください。
+      SQLエディタで以下を実行してテーブルを作成：<br>
+      <code>create table references_data (id text primary key, title text, authors text, year text, journal text, volume text, url text, abstract text, citation_text text, notes text, tags text, created_at timestamp default now());</code>
     </div>
   </div>
 </div>
@@ -206,17 +168,18 @@ textarea.import-textarea:focus { border-color: var(--accent2); }
     <div class="status-dot" id="statusDot"></div>
     <span id="statusText">接続中...</span>
   </div>
-  <button class="btn btn-sm" style="background:rgba(255,255,255,0.15);color:#fff;border-color:rgba(255,255,255,0.3);font-size:11px;" onclick="showSetup()">設定</button>
+  <button class="btn btn-sm" style="background:rgba(255,255,255,.15);color:#fff;border-color:rgba(255,255,255,.3);font-size:11px;" onclick="showSetup()">設定</button>
 </div>
 
 <div class="app">
-  <div class="sidebar" id="sidebar">
+  <div class="sidebar">
     <div class="sidebar-search">
       <input class="search-input" id="searchInput" type="text" placeholder="タイトル・著者で検索...">
     </div>
     <div class="ref-list" id="refList"></div>
     <div class="sidebar-footer">
-      <button class="btn btn-primary" style="flex:1" onclick="newRef()">+ 新規追加</button>
+      <button class="btn btn-primary" style="flex:1" onclick="newRef()">+ 新規</button>
+      <button class="btn btn-teal" onclick="openBulk()" title="複数文献を一括登録">⬆ 一括</button>
       <button class="btn" onclick="showTabGlobal('export')">出力</button>
     </div>
   </div>
@@ -225,7 +188,7 @@ textarea.import-textarea:focus { border-color: var(--accent2); }
     <div class="welcome" id="welcomeState">
       <div class="welcome-icon">❧</div>
       <div style="font-size:15px;color:var(--text2);font-weight:500;">文献を選択または新規追加</div>
-      <div style="font-size:13px;">左のリストから選ぶか「+ 新規追加」をクリック</div>
+      <div style="font-size:13px;">左のリストから選ぶか「+ 新規」または「⬆ 一括」をクリック</div>
     </div>
 
     <div class="editor" id="editorState">
@@ -236,7 +199,8 @@ textarea.import-textarea:focus { border-color: var(--accent2); }
       </div>
       <div class="tabs">
         <div class="tab active" onclick="showTab('info')">基本情報</div>
-        <div class="tab" onclick="showTab('research')">Claudeでリサーチ</div>
+        <div class="tab" onclick="showTab('research')">リサーチ</div>
+        <div class="tab" onclick="showTab('bulk')">一括登録</div>
         <div class="tab" onclick="showTab('export')">引用出力</div>
       </div>
       <div class="tab-content">
@@ -275,34 +239,20 @@ textarea.import-textarea:focus { border-color: var(--accent2); }
           </div>
           <div class="card">
             <div class="card-title">内容・メモ</div>
-            <div class="field-group">
-              <label class="field-label">抄録</label>
-              <textarea class="field-input" id="f-abstract" rows="4" placeholder="論文の要約・概要"></textarea>
-            </div>
-            <div class="field-group">
-              <label class="field-label">引用欄に記載する文</label>
-              <textarea class="field-input" id="f-citation-text" rows="3" placeholder="本文中でこの文献を引用する際の文章"></textarea>
-            </div>
-            <div class="field-group">
-              <label class="field-label">備考・メモ</label>
-              <textarea class="field-input" id="f-notes" rows="3" placeholder="個人的なメモ、重要ポイントなど"></textarea>
-            </div>
-            <div class="field-group">
-              <label class="field-label">タグ（カンマ区切り）</label>
-              <input class="field-input" id="f-tags" placeholder="機械学習, 自然言語処理">
-            </div>
+            <div class="field-group"><label class="field-label">抄録</label><textarea class="field-input" id="f-abstract" rows="4" placeholder="論文の要約・概要"></textarea></div>
+            <div class="field-group"><label class="field-label">引用欄に記載する文</label><textarea class="field-input" id="f-citation-text" rows="3" placeholder="本文中でこの文献を引用する際の文章"></textarea></div>
+            <div class="field-group"><label class="field-label">備考・メモ</label><textarea class="field-input" id="f-notes" rows="3" placeholder="個人的なメモ、重要ポイントなど"></textarea></div>
+            <div class="field-group"><label class="field-label">タグ（カンマ区切り）</label><input class="field-input" id="f-tags" placeholder="機械学習, 自然言語処理"></div>
           </div>
         </div>
 
         <div class="tab-panel" id="tab-research">
-          <div class="info-notice">
-            下のボタンを押すとClaudeに質問がコピーされます。Claudeに貼り付けて回答を受け取り、下の「貼り付けてフォームに反映」欄に貼り付けてください。
-          </div>
+          <div class="info-notice">下のボタンを押すとClaudeへの質問がクリップボードにコピーされます。Claudeに貼り付けて回答を受け取り、下の欄に貼り付けてください。</div>
           <div class="card" style="margin-bottom:16px;">
             <div class="card-title">よく使うリサーチ質問</div>
             <div class="prompt-grid">
               <button class="prompt-btn" onclick="sendQ('この文献の著者・発行年・ジャーナル・抄録・APA引用文を調べて、以下の形式のJSONで返してください。\n```json\n{\"title\":\"\",\"authors\":\"\",\"year\":\"\",\"journal\":\"\",\"volume\":\"\",\"url\":\"\",\"abstract\":\"\",\"citationText\":\"\"}\n```')">
-                <span>🔍</span><span class="prompt-btn-label">文献情報を一括調査（JSON形式で返す）</span><span class="prompt-btn-arrow">コピー ↗</span>
+                <span>🔍</span><span class="prompt-btn-label">文献情報を一括調査（JSON形式）</span><span class="prompt-btn-arrow">コピー ↗</span>
               </button>
               <button class="prompt-btn" onclick="sendQ('この文献のAPA形式・MLA形式・和文形式の引用文を作成してください。')">
                 <span>📝</span><span class="prompt-btn-label">各形式の引用文を作成</span><span class="prompt-btn-arrow">コピー ↗</span>
@@ -320,9 +270,9 @@ textarea.import-textarea:focus { border-color: var(--accent2); }
             </div>
           </div>
           <div class="import-section">
-            <div class="import-header">📋 Claudeの回答を貼り付けてフォームに反映</div>
+            <div class="import-header">📋 Claudeの回答をフォームに反映（1件）</div>
             <div class="import-body">
-              <div class="import-hint">ClaudeがJSON形式（```json ... ```）で返した内容をそのまま貼り付けてください。</div>
+              <div class="import-hint">ClaudeがJSON形式（```json...```）で返した内容をそのまま貼り付けてください。</div>
               <textarea class="import-textarea" id="importText" placeholder='{"title":"...","authors":"...","year":"...","journal":"...","abstract":"...","citationText":"..."}'></textarea>
               <div class="import-actions">
                 <button class="btn btn-sm btn-primary" onclick="importFromText()">フォームに反映</button>
@@ -332,14 +282,65 @@ textarea.import-textarea:focus { border-color: var(--accent2); }
           </div>
         </div>
 
+        <!-- 一括登録タブ -->
+        <div class="tab-panel" id="tab-bulk">
+          <div class="bulk-info">
+            <strong>複数文献をまとめて登録する手順：</strong><br>
+            ① 下の「依頼文をコピー」ボタンを押す<br>
+            ② Claudeを開き、サーベイ文書（.docx）をアップロードしてコピーした依頼文を貼り付ける<br>
+            ③ ClaudeからJSON配列が返ってくる<br>
+            ④ そのJSONを下の「貼り付け欄」にペーストして「プレビュー」→「登録」
+          </div>
+
+          <div class="card">
+            <div class="card-title">Step 1 — Claudeへの依頼文</div>
+            <button class="prompt-btn" onclick="copyBulkPrompt()">
+              <span>📋</span>
+              <span class="prompt-btn-label">「文献リストをJSON配列で出力してください」依頼文をコピー</span>
+              <span class="prompt-btn-arrow">コピー ↗</span>
+            </button>
+          </div>
+
+          <div class="card">
+            <div class="card-title">Step 2 — Claudeの回答（JSON配列）を貼り付け</div>
+            <div class="json-hint">
+              ClaudeがJSON配列（<code>[{...}, {...}]</code>）で返した内容をそのまま貼り付けてください。コードブロック（```json）ごと貼り付けてもOKです。
+            </div>
+            <textarea class="json-textarea" id="bulkJsonText" placeholder='[{"title":"論文タイトル","authors":"著者名","year":"2024","journal":"ジャーナル名","tags":"機械学習,洪水予測"}, ...]'></textarea>
+            <div style="display:flex;gap:8px;margin-top:10px;align-items:center;">
+              <button class="btn btn-sm btn-primary" onclick="parseBulkJson()">プレビュー</button>
+              <button class="btn btn-sm" onclick="clearBulk()">クリア</button>
+              <span id="bulkParseStatus" style="font-size:12px;color:var(--text3);"></span>
+            </div>
+          </div>
+
+          <div class="bulk-preview" id="bulkPreviewSection" style="display:none;">
+            <div class="bulk-preview-header">
+              <span id="bulkPreviewTitle">登録プレビュー</span>
+              <div style="display:flex;gap:6px;">
+                <button class="btn btn-sm" onclick="selectAllBulk()">全選択</button>
+                <button class="btn btn-sm" onclick="deselectAllBulk()">全解除</button>
+              </div>
+            </div>
+            <div class="bulk-preview-list" id="bulkPreviewList"></div>
+          </div>
+
+          <div class="progress-bar-wrap" id="bulkProgressWrap">
+            <div class="progress-bar" id="bulkProgressBar" style="width:0%"></div>
+          </div>
+
+          <div class="bulk-actions" id="bulkRegisterActions" style="display:none;">
+            <button class="btn btn-primary" id="bulkRegisterBtn" onclick="registerBulk()">選択した文献を登録</button>
+            <span class="bulk-count" id="bulkSelectedCount"></span>
+          </div>
+        </div>
+
         <div class="tab-panel" id="tab-export">
           <div class="export-controls">
             <span class="export-label">フォーマット：</span>
             <select class="format-select" id="citationFormat" onchange="updateOutput()">
-              <option value="apa">APA</option>
-              <option value="mla">MLA</option>
-              <option value="chicago">Chicago</option>
-              <option value="vancouver">Vancouver</option>
+              <option value="apa">APA</option><option value="mla">MLA</option>
+              <option value="chicago">Chicago</option><option value="vancouver">Vancouver</option>
               <option value="jp">和文（著者年）</option>
             </select>
             <div class="export-select-actions">
@@ -363,395 +364,333 @@ textarea.import-textarea:focus { border-color: var(--accent2); }
 <div class="toast" id="toast"></div>
 
 <script>
-// ===== Config =====
-const CONFIG_KEY = 'refman_supabase_config';
-const LOCAL_KEY  = 'refman_local_fallback';
-let SUPABASE_URL = '';
-let SUPABASE_KEY = '';
-let useLocal = false;
+const CONFIG_KEY='refman_config_v2', LOCAL_KEY='refman_local_v2';
+let SUPABASE_URL='', SUPABASE_KEY='', useLocal=false;
+let refs=[], currentId=null, bulkCandidates=[];
 
-let refs = [];
-let currentId = null;
-
-// ===== Setup =====
-function loadConfig() {
-  try {
-    const c = JSON.parse(localStorage.getItem(CONFIG_KEY) || '{}');
-    if (c.url && c.key) {
-      SUPABASE_URL = c.url.replace(/\/$/, '');
-      SUPABASE_KEY = c.key;
-      return true;
-    }
-  } catch(e) {}
-  return false;
+function loadConfig(){
+  try{const c=JSON.parse(localStorage.getItem(CONFIG_KEY)||'{}');
+    if(c.url&&c.key){SUPABASE_URL=c.url.replace(/\/$/,'');SUPABASE_KEY=c.key;return true;}}catch(e){}return false;
+}
+function saveSetup(){
+  const url=document.getElementById('setupUrl').value.trim().replace(/\/$/,'');
+  const key=document.getElementById('setupKey').value.trim();
+  if(!url||!key){toast('URLとKeyを両方入力してください');return;}
+  SUPABASE_URL=url;SUPABASE_KEY=key;useLocal=false;
+  localStorage.setItem(CONFIG_KEY,JSON.stringify({url,key}));
+  document.getElementById('setupOverlay').style.display='none';init();
+}
+function useLocalMode(){useLocal=true;document.getElementById('setupOverlay').style.display='none';setStatus('local','ローカルモード');loadLocal();}
+function showSetup(){
+  const c=JSON.parse(localStorage.getItem(CONFIG_KEY)||'{}');
+  if(c.url)document.getElementById('setupUrl').value=c.url;
+  if(c.key)document.getElementById('setupKey').value=c.key;
+  document.getElementById('setupOverlay').style.display='flex';
+}
+function setStatus(state,text){
+  document.getElementById('statusDot').className='status-dot'+(state==='online'?'':state==='syncing'?' syncing':' offline');
+  document.getElementById('statusText').textContent=text;
 }
 
-function saveSetup() {
-  const url = document.getElementById('setupUrl').value.trim().replace(/\/$/, '');
-  const key = document.getElementById('setupKey').value.trim();
-  if (!url || !key) { toast('URLとKeyを両方入力してください'); return; }
-  SUPABASE_URL = url;
-  SUPABASE_KEY = key;
-  useLocal = false;
-  localStorage.setItem(CONFIG_KEY, JSON.stringify({ url, key }));
-  document.getElementById('setupOverlay').style.display = 'none';
-  init();
+async function sbFetch(path,options={}){
+  const res=await fetch(SUPABASE_URL+'/rest/v1/'+path,{...options,headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':'return=representation',...(options.headers||{})}});
+  if(!res.ok){const e=await res.text();throw new Error(e);}
+  const t=await res.text();return t?JSON.parse(t):[];
 }
+function rowToRef(r){return{id:r.id,title:r.title||'',authors:r.authors||'',year:r.year||'',journal:r.journal||'',volume:r.volume||'',url:r.url||'',abstract:r.abstract||'',citationText:r.citation_text||'',notes:r.notes||'',tags:r.tags?r.tags.split(',').map(t=>t.trim()).filter(Boolean):[]};}
+function refToRow(r){return{id:r.id,title:r.title,authors:r.authors,year:r.year,journal:r.journal,volume:r.volume,url:r.url,abstract:r.abstract,citation_text:r.citationText,notes:r.notes,tags:(r.tags||[]).join(', ')};}
 
-function useLocalMode() {
-  useLocal = true;
-  document.getElementById('setupOverlay').style.display = 'none';
-  setStatus('local', 'ローカルモード');
-  loadLocal();
+async function fetchRefs(){setStatus('syncing','同期中...');const rows=await sbFetch('references_data?order=created_at.desc');refs=rows.map(rowToRef);setStatus('online','Supabase 同期済み');}
+async function upsertRef(r){await sbFetch('references_data',{method:'POST',headers:{'Prefer':'resolution=merge-duplicates,return=representation'},body:JSON.stringify(refToRow(r))});}
+async function deleteRefRemote(id){await sbFetch('references_data?id=eq.'+id,{method:'DELETE'});}
+
+function loadLocal(){try{const d=localStorage.getItem(LOCAL_KEY);if(d)refs=JSON.parse(d);}catch(e){}renderAll();}
+function saveLocal(){try{localStorage.setItem(LOCAL_KEY,JSON.stringify(refs));}catch(e){}}
+
+async function init(){
+  if(useLocal){loadLocal();return;}
+  try{await fetchRefs();renderAll();}
+  catch(e){setStatus('offline','接続失敗');toast('Supabase接続失敗。設定を確認してください。');}
 }
+function renderAll(){renderList();if(refs.length>0&&!currentId)selectRef(refs[0].id);}
 
-function showSetup() {
-  const c = JSON.parse(localStorage.getItem(CONFIG_KEY) || '{}');
-  if (c.url) document.getElementById('setupUrl').value = c.url;
-  if (c.key) document.getElementById('setupKey').value = c.key;
-  document.getElementById('setupOverlay').style.display = 'flex';
-}
+function genId(){return Date.now()+Math.random().toString(36).slice(2,5);}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
 
-function setStatus(state, text) {
-  const dot = document.getElementById('statusDot');
-  const label = document.getElementById('statusText');
-  dot.className = 'status-dot' + (state === 'online' ? '' : state === 'syncing' ? ' syncing' : ' offline');
-  label.textContent = text;
-}
-
-// ===== Supabase API =====
-async function sbFetch(path, options = {}) {
-  const res = await fetch(SUPABASE_URL + '/rest/v1/' + path, {
-    ...options,
-    headers: {
-      'apikey': SUPABASE_KEY,
-      'Authorization': 'Bearer ' + SUPABASE_KEY,
-      'Content-Type': 'application/json',
-      'Prefer': 'return=representation',
-      ...(options.headers || {})
-    }
-  });
-  if (!res.ok) {
-    const err = await res.text();
-    throw new Error(err);
-  }
-  const text = await res.text();
-  return text ? JSON.parse(text) : [];
-}
-
-function rowToRef(row) {
-  return {
-    id: row.id,
-    title: row.title || '',
-    authors: row.authors || '',
-    year: row.year || '',
-    journal: row.journal || '',
-    volume: row.volume || '',
-    url: row.url || '',
-    abstract: row.abstract || '',
-    citationText: row.citation_text || '',
-    notes: row.notes || '',
-    tags: row.tags ? row.tags.split(',').map(t=>t.trim()).filter(Boolean) : [],
-  };
-}
-
-function refToRow(r) {
-  return {
-    id: r.id,
-    title: r.title,
-    authors: r.authors,
-    year: r.year,
-    journal: r.journal,
-    volume: r.volume,
-    url: r.url,
-    abstract: r.abstract,
-    citation_text: r.citationText,
-    notes: r.notes,
-    tags: (r.tags||[]).join(', '),
-  };
-}
-
-async function fetchRefs() {
-  setStatus('syncing', '同期中...');
-  const rows = await sbFetch('references_data?order=created_at.desc');
-  refs = rows.map(rowToRef);
-  setStatus('online', 'Supabase 同期済み');
-}
-
-async function upsertRef(r) {
-  setStatus('syncing', '保存中...');
-  await sbFetch('references_data', {
-    method: 'POST',
-    headers: { 'Prefer': 'resolution=merge-duplicates,return=representation' },
-    body: JSON.stringify(refToRow(r))
-  });
-  setStatus('online', 'Supabase 同期済み');
-}
-
-async function deleteRefRemote(id) {
-  setStatus('syncing', '削除中...');
-  await sbFetch('references_data?id=eq.' + id, { method: 'DELETE' });
-  setStatus('online', 'Supabase 同期済み');
-}
-
-// ===== Local fallback =====
-function loadLocal() {
-  try {
-    const d = localStorage.getItem(LOCAL_KEY);
-    if (d) refs = JSON.parse(d);
-  } catch(e) {}
-  renderAll();
-}
-
-function saveLocal() {
-  try { localStorage.setItem(LOCAL_KEY, JSON.stringify(refs)); } catch(e) {}
-}
-
-// ===== Init =====
-async function init() {
-  if (useLocal) { loadLocal(); return; }
-  try {
-    await fetchRefs();
-    renderAll();
-  } catch(e) {
-    setStatus('offline', '接続失敗');
-    toast('Supabase接続失敗。設定を確認してください。');
-  }
-}
-
-function renderAll() {
-  renderList();
-  updateHeaderCount();
-  if (refs.length > 0 && !currentId) selectRef(refs[0].id);
-}
-
-// ===== UI Helpers =====
-function genId() { return Date.now() + Math.random().toString(36).slice(2,5); }
-
-function toast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2500);
-}
-
-function updateHeaderCount() {
-  // no header count element but keep for compat
-}
-
-function renderList() {
-  const q = document.getElementById('searchInput').value.toLowerCase();
-  const list = document.getElementById('refList');
-  const filtered = refs.filter(r =>
-    (r.title||'').toLowerCase().includes(q) || (r.authors||'').toLowerCase().includes(q)
-  );
-  if (!filtered.length) { list.innerHTML = '<div class="empty-state">文献がありません</div>'; return; }
-  list.innerHTML = filtered.map(r => `
+function renderList(){
+  const q=document.getElementById('searchInput').value.toLowerCase();
+  const list=document.getElementById('refList');
+  const filtered=refs.filter(r=>(r.title||'').toLowerCase().includes(q)||(r.authors||'').toLowerCase().includes(q));
+  if(!filtered.length){list.innerHTML='<div class="empty-state">文献がありません</div>';return;}
+  list.innerHTML=filtered.map(r=>`
     <div class="ref-item ${r.id===currentId?'active':''}" onclick="selectRef('${r.id}')">
       <div class="ref-item-title">${r.title||'（タイトルなし）'}</div>
       <div class="ref-item-meta">${[r.authors,r.year].filter(Boolean).join(' · ')}</div>
       ${(r.tags||[]).length?`<div class="ref-item-tags">${r.tags.slice(0,3).map((t,i)=>`<span class="tag tag-${i%3}">${t}</span>`).join('')}</div>`:''}
-    </div>
-  `).join('');
+    </div>`).join('');
 }
 
-function selectRef(id) {
-  currentId = id;
-  const r = refs.find(x=>x.id===id);
-  if (!r) return;
-  document.getElementById('welcomeState').style.display = 'none';
-  document.getElementById('editorState').style.display = 'flex';
-  document.getElementById('editorTitle').textContent = r.title || '（タイトルなし）';
-  document.getElementById('f-title').value = r.title||'';
-  document.getElementById('f-authors').value = r.authors||'';
-  document.getElementById('f-year').value = r.year||'';
-  document.getElementById('f-journal').value = r.journal||'';
-  document.getElementById('f-volume').value = r.volume||'';
-  document.getElementById('f-url').value = r.url||'';
-  document.getElementById('f-abstract').value = r.abstract||'';
-  document.getElementById('f-citation-text').value = r.citationText||'';
-  document.getElementById('f-notes').value = r.notes||'';
-  document.getElementById('f-tags').value = (r.tags||[]).join(', ');
-  renderList();
-  showTab('info');
+function selectRef(id){
+  currentId=id;const r=refs.find(x=>x.id===id);if(!r)return;
+  document.getElementById('welcomeState').style.display='none';
+  document.getElementById('editorState').style.display='flex';
+  document.getElementById('editorTitle').textContent=r.title||'（タイトルなし）';
+  ['title','authors','year','journal','volume','url','abstract'].forEach(k=>document.getElementById('f-'+k).value=r[k]||'');
+  document.getElementById('f-citation-text').value=r.citationText||'';
+  document.getElementById('f-notes').value=r.notes||'';
+  document.getElementById('f-tags').value=(r.tags||[]).join(', ');
+  renderList();showTab('info');
 }
 
-function newRef() {
-  const r = { id:genId(), title:'', authors:'', year:'', journal:'', volume:'', url:'', abstract:'', citationText:'', notes:'', tags:[] };
-  refs.unshift(r);
-  if (useLocal) saveLocal();
-  selectRef(r.id);
+function newRef(){
+  const r={id:genId(),title:'',authors:'',year:'',journal:'',volume:'',url:'',abstract:'',citationText:'',notes:'',tags:[]};
+  refs.unshift(r);if(useLocal)saveLocal();selectRef(r.id);
 }
 
-async function saveRef() {
-  if (!currentId) return;
-  const idx = refs.findIndex(x=>x.id===currentId);
-  if (idx<0) return;
-  const btn = document.getElementById('saveBtn');
-  btn.disabled = true;
-  btn.textContent = '保存中...';
-  refs[idx] = {
-    ...refs[idx],
-    title: document.getElementById('f-title').value.trim(),
-    authors: document.getElementById('f-authors').value.trim(),
-    year: document.getElementById('f-year').value.trim(),
-    journal: document.getElementById('f-journal').value.trim(),
-    volume: document.getElementById('f-volume').value.trim(),
-    url: document.getElementById('f-url').value.trim(),
-    abstract: document.getElementById('f-abstract').value.trim(),
-    citationText: document.getElementById('f-citation-text').value.trim(),
-    notes: document.getElementById('f-notes').value.trim(),
-    tags: document.getElementById('f-tags').value.split(',').map(t=>t.trim()).filter(Boolean),
+async function saveRef(){
+  if(!currentId)return;
+  const idx=refs.findIndex(x=>x.id===currentId);if(idx<0)return;
+  const btn=document.getElementById('saveBtn');btn.disabled=true;btn.textContent='保存中...';
+  refs[idx]={...refs[idx],
+    title:document.getElementById('f-title').value.trim(),
+    authors:document.getElementById('f-authors').value.trim(),
+    year:document.getElementById('f-year').value.trim(),
+    journal:document.getElementById('f-journal').value.trim(),
+    volume:document.getElementById('f-volume').value.trim(),
+    url:document.getElementById('f-url').value.trim(),
+    abstract:document.getElementById('f-abstract').value.trim(),
+    citationText:document.getElementById('f-citation-text').value.trim(),
+    notes:document.getElementById('f-notes').value.trim(),
+    tags:document.getElementById('f-tags').value.split(',').map(t=>t.trim()).filter(Boolean),
   };
-  try {
-    if (useLocal) { saveLocal(); }
-    else { await upsertRef(refs[idx]); }
-    document.getElementById('editorTitle').textContent = refs[idx].title || '（タイトルなし）';
-    renderList();
-    toast('保存しました');
-  } catch(e) {
-    toast('保存失敗: ' + e.message);
-    setStatus('offline', '保存失敗');
-  }
-  btn.disabled = false;
-  btn.textContent = '保存';
+  try{
+    if(useLocal)saveLocal();else{setStatus('syncing','保存中...');await upsertRef(refs[idx]);setStatus('online','Supabase 同期済み');}
+    document.getElementById('editorTitle').textContent=refs[idx].title||'（タイトルなし）';
+    renderList();toast('保存しました');
+  }catch(e){toast('保存失敗: '+e.message);setStatus('offline','保存失敗');}
+  btn.disabled=false;btn.textContent='保存';
 }
 
-async function deleteRef() {
-  if (!currentId || !confirm('この文献を削除しますか？')) return;
-  const id = currentId;
-  try {
-    if (!useLocal) await deleteRefRemote(id);
-    refs = refs.filter(x=>x.id!==id);
-    if (useLocal) saveLocal();
-    currentId = null;
-    renderList();
-    document.getElementById('welcomeState').style.display = 'flex';
-    document.getElementById('editorState').style.display = 'none';
+async function deleteRef(){
+  if(!currentId||!confirm('この文献を削除しますか？'))return;
+  const id=currentId;
+  try{
+    if(!useLocal){setStatus('syncing','削除中...');await deleteRefRemote(id);setStatus('online','Supabase 同期済み');}
+    refs=refs.filter(x=>x.id!==id);if(useLocal)saveLocal();
+    currentId=null;renderList();
+    document.getElementById('welcomeState').style.display='flex';
+    document.getElementById('editorState').style.display='none';
     toast('削除しました');
-  } catch(e) {
-    toast('削除失敗: ' + e.message);
-  }
+  }catch(e){toast('削除失敗: '+e.message);}
 }
 
-function showTab(name) {
+function showTab(name){
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  const panel = document.getElementById('tab-'+name);
-  if (panel) panel.classList.add('active');
-  const names = ['info','research','export'];
-  const tabs = document.querySelectorAll('.tab');
-  const i = names.indexOf(name);
-  if (i>=0 && tabs[i]) tabs[i].classList.add('active');
-  if (name==='export') renderExportCheckboxes();
+  const panel=document.getElementById('tab-'+name);if(panel)panel.classList.add('active');
+  const names=['info','research','bulk','export'];
+  const tabs=document.querySelectorAll('.tab');
+  const i=names.indexOf(name);if(i>=0&&tabs[i])tabs[i].classList.add('active');
+  if(name==='export')renderExportCheckboxes();
 }
 
-function showTabGlobal(name) {
-  if (!currentId && refs.length>0) selectRef(refs[0].id);
-  else if (!currentId) return;
+function showTabGlobal(name){
+  if(!currentId&&refs.length>0)selectRef(refs[0].id);else if(!currentId)return;
   showTab(name);
 }
 
-function getRefInfo() {
-  const title = document.getElementById('f-title').value || '（タイトル未入力）';
-  const authors = document.getElementById('f-authors').value;
-  const year = document.getElementById('f-year').value;
-  const journal = document.getElementById('f-journal').value;
-  const url = document.getElementById('f-url').value;
-  let info = `文献タイトル：${title}`;
-  if (authors) info += `\n著者：${authors}`;
-  if (year) info += `\n発行年：${year}`;
-  if (journal) info += `\nジャーナル：${journal}`;
-  if (url) info += `\nURL/DOI：${url}`;
+function openBulk(){
+  if(!currentId){
+    document.getElementById('welcomeState').style.display='none';
+    document.getElementById('editorState').style.display='flex';
+    document.getElementById('editorTitle').textContent='一括登録';
+  }
+  showTab('bulk');
+}
+
+function getRefInfo(){
+  const title=document.getElementById('f-title').value||'（タイトル未入力）';
+  const authors=document.getElementById('f-authors').value;
+  const year=document.getElementById('f-year').value;
+  const journal=document.getElementById('f-journal').value;
+  const url=document.getElementById('f-url').value;
+  let info=`文献タイトル：${title}`;
+  if(authors)info+=`\n著者：${authors}`;
+  if(year)info+=`\n発行年：${year}`;
+  if(journal)info+=`\nジャーナル：${journal}`;
+  if(url)info+=`\nURL/DOI：${url}`;
   return info;
 }
-
-function sendQ(question) {
-  const msg = `【文献情報】\n${getRefInfo()}\n\n【質問】\n${question}`;
-  navigator.clipboard.writeText(msg).then(() => toast('質問をコピーしました。Claudeに貼り付けてください。'));
+function sendQ(q){navigator.clipboard.writeText(`【文献情報】\n${getRefInfo()}\n\n【質問】\n${q}`).then(()=>toast('質問をコピーしました。Claudeに貼り付けてください。'));}
+function sendCustomQ(){const q=document.getElementById('customQuery').value.trim();if(!q)return;sendQ(q);document.getElementById('customQuery').value='';}
+function importFromText(){
+  const raw=document.getElementById('importText').value.trim();if(!raw){toast('テキストを貼り付けてください');return;}
+  try{
+    const m=raw.match(/```json\s*([\s\S]*?)```/)||raw.match(/```\s*([\s\S]*?)```/);
+    const p=JSON.parse(m?m[1].trim():raw);
+    if(p.title)document.getElementById('f-title').value=p.title;
+    if(p.authors)document.getElementById('f-authors').value=p.authors;
+    if(p.year)document.getElementById('f-year').value=p.year;
+    if(p.journal)document.getElementById('f-journal').value=p.journal;
+    if(p.volume)document.getElementById('f-volume').value=p.volume;
+    if(p.url)document.getElementById('f-url').value=p.url;
+    if(p.abstract)document.getElementById('f-abstract').value=p.abstract;
+    if(p.citationText)document.getElementById('f-citation-text').value=p.citationText;
+    document.getElementById('importText').value='';
+    toast('フォームに反映しました。保存ボタンを押してください。');showTab('info');
+  }catch(e){toast('JSON解析エラー：有効なJSONを貼り付けてください');}
 }
 
-function sendCustomQ() {
-  const q = document.getElementById('customQuery').value.trim();
-  if (!q) return;
-  sendQ(q);
-  document.getElementById('customQuery').value = '';
+// ===== 一括登録 =====
+function copyBulkPrompt(){
+  const msg=`添付の文書に含まれる文献リストを、以下のJSON配列形式で全件出力してください。
+コードブロック（\`\`\`json）で囲んで返してください。不明な項目は空文字にしてください。
+
+[
+  {
+    "title": "論文タイトル",
+    "authors": "著者名（カンマ区切り）",
+    "year": "発行年",
+    "journal": "ジャーナル・出版社名",
+    "volume": "巻・号・ページ",
+    "url": "URL・DOI",
+    "abstract": "抄録・概要（わかれば）",
+    "citationText": "APA形式の引用文",
+    "notes": "備考・メモ",
+    "tags": "タグ1,タグ2"
+  }
+]`;
+  navigator.clipboard.writeText(msg).then(()=>toast('依頼文をコピーしました。Claudeにサーベイ文書と一緒に貼り付けてください。'));
 }
 
-function importFromText() {
-  const raw = document.getElementById('importText').value.trim();
-  if (!raw) { toast('テキストを貼り付けてください'); return; }
-  try {
-    const m = raw.match(/```json\s*([\s\S]*?)```/) || raw.match(/```\s*([\s\S]*?)```/);
-    const jsonStr = m ? m[1].trim() : raw;
-    const p = JSON.parse(jsonStr);
-    if (p.title) document.getElementById('f-title').value = p.title;
-    if (p.authors) document.getElementById('f-authors').value = p.authors;
-    if (p.year) document.getElementById('f-year').value = p.year;
-    if (p.journal) document.getElementById('f-journal').value = p.journal;
-    if (p.volume) document.getElementById('f-volume').value = p.volume;
-    if (p.url) document.getElementById('f-url').value = p.url;
-    if (p.abstract) document.getElementById('f-abstract').value = p.abstract;
-    if (p.citationText) document.getElementById('f-citation-text').value = p.citationText;
-    document.getElementById('importText').value = '';
-    toast('フォームに反映しました。保存ボタンを押してください。');
-    showTab('info');
-  } catch(e) {
-    toast('JSON解析エラー：有効なJSONを貼り付けてください');
+function parseBulkJson(){
+  const raw=document.getElementById('bulkJsonText').value.trim();
+  const status=document.getElementById('bulkParseStatus');
+  if(!raw){status.textContent='テキストを貼り付けてください';return;}
+  try{
+    const m=raw.match(/```json\s*([\s\S]*?)```/)||raw.match(/```\s*([\s\S]*?)```/);
+    const arr=JSON.parse(m?m[1].trim():raw);
+    if(!Array.isArray(arr)){toast('JSON配列（[...]形式）を貼り付けてください');return;}
+    bulkCandidates=arr.map(item=>({
+      id:genId(),
+      title:item.title||'',
+      authors:item.authors||'',
+      year:String(item.year||''),
+      journal:item.journal||'',
+      volume:item.volume||'',
+      url:item.url||'',
+      abstract:item.abstract||'',
+      citationText:item.citationText||item.citation_text||'',
+      notes:item.notes||'',
+      tags:item.tags?item.tags.split(',').map(t=>t.trim()).filter(Boolean):[],
+      _checked:true,
+      _tagStr:item.tags||''
+    }));
+    status.textContent=`${bulkCandidates.length}件を解析しました`;
+    renderBulkPreview();
+  }catch(e){status.textContent='解析エラー：有効なJSON配列を貼り付けてください';}
+}
+
+function renderBulkPreview(){
+  document.getElementById('bulkPreviewSection').style.display='block';
+  document.getElementById('bulkRegisterActions').style.display='flex';
+  document.getElementById('bulkPreviewTitle').textContent=`登録プレビュー（${bulkCandidates.length}件）`;
+  document.getElementById('bulkPreviewList').innerHTML=bulkCandidates.map((r,i)=>`
+    <div class="bulk-ref-row">
+      <input type="checkbox" id="bc_${i}" ${r._checked?'checked':''} onchange="bulkCandidates[${i}]._checked=this.checked;updateBulkCount()">
+      <div class="bulk-ref-info">
+        <div class="bulk-ref-title">${r.title||'（タイトルなし）'}</div>
+        <div class="bulk-ref-meta">${[r.authors,r.year,r.journal].filter(Boolean).join(' · ')}</div>
+        <div class="bulk-tag-row">
+          <span class="bulk-tag-label">タグ：</span>
+          <input class="bulk-tag-input" value="${r._tagStr}" placeholder="タグ（カンマ区切り）" oninput="bulkCandidates[${i}]._tagStr=this.value">
+        </div>
+      </div>
+    </div>`).join('');
+  updateBulkCount();
+}
+
+function updateBulkCount(){
+  const n=bulkCandidates.filter(r=>r._checked).length;
+  document.getElementById('bulkSelectedCount').textContent=n+'件選択中';
+  document.getElementById('bulkRegisterBtn').textContent=`選択した ${n} 件を登録`;
+}
+function selectAllBulk(){bulkCandidates.forEach((_,i)=>{bulkCandidates[i]._checked=true;const cb=document.getElementById('bc_'+i);if(cb)cb.checked=true;});updateBulkCount();}
+function deselectAllBulk(){bulkCandidates.forEach((_,i)=>{bulkCandidates[i]._checked=false;const cb=document.getElementById('bc_'+i);if(cb)cb.checked=false;});updateBulkCount();}
+
+function clearBulk(){
+  document.getElementById('bulkJsonText').value='';
+  document.getElementById('bulkParseStatus').textContent='';
+  document.getElementById('bulkPreviewSection').style.display='none';
+  document.getElementById('bulkRegisterActions').style.display='none';
+  bulkCandidates=[];
+}
+
+async function registerBulk(){
+  const selected=bulkCandidates.filter(r=>r._checked).map(r=>({
+    ...r, tags:r._tagStr?r._tagStr.split(',').map(t=>t.trim()).filter(Boolean):r.tags
+  }));
+  if(!selected.length){toast('文献を選択してください');return;}
+  const btn=document.getElementById('bulkRegisterBtn');btn.disabled=true;
+  const wrap=document.getElementById('bulkProgressWrap');wrap.style.display='block';
+  const bar=document.getElementById('bulkProgressBar');
+  if(!useLocal)setStatus('syncing','一括登録中...');
+  let done=0,failed=0;
+  for(const r of selected){
+    try{
+      if(useLocal)refs.unshift(r);
+      else{await upsertRef(r);refs.unshift(r);}
+    }catch(e){failed++;}
+    done++;
+    bar.style.width=Math.round(done/selected.length*100)+'%';
+  }
+  if(useLocal)saveLocal();
+  else setStatus('online','Supabase 同期済み');
+  renderList();
+  setTimeout(()=>{wrap.style.display='none';bar.style.width='0%';},400);
+  btn.disabled=false;
+  toast(failed?`${done-failed}件登録完了（${failed}件失敗）`:`${selected.length}件を登録しました`);
+  clearBulk();
+  if(refs.length>0)selectRef(refs[0].id);
+}
+
+// ===== 引用出力 =====
+function formatCitation(r,fmt){
+  const a=r.authors||'著者不明',y=r.year||'n.d.',t=r.title||'（タイトルなし）';
+  const j=r.journal||'',v=r.volume||'',u=r.url?'\n    '+r.url:'';
+  const jv=j+(v?', '+v:'');
+  switch(fmt){
+    case 'apa':return`${a} (${y}). ${t}. ${jv}.${u}`;
+    case 'mla':return`${a}. "${t}." ${jv}, ${y}.${u}`;
+    case 'chicago':return`${a}. "${t}." ${jv} (${y}).${u}`;
+    case 'vancouver':return`${a}. ${t}. ${j}. ${y}${v?';'+v:''}.${u}`;
+    case 'jp':return`${a}（${y}）${t}${j?' '+j:''}${v?' '+v:''}.${u}`;
+    default:return`${a} (${y}). ${t}.${u}`;
   }
 }
-
-function formatCitation(r, fmt) {
-  const a = r.authors||'著者不明', y = r.year||'n.d.', t = r.title||'（タイトルなし）';
-  const j = r.journal||'', v = r.volume||'', u = r.url ? '\n    '+r.url : '';
-  const jv = j + (v ? ', '+v : '');
-  switch(fmt) {
-    case 'apa': return `${a} (${y}). ${t}. ${jv}.${u}`;
-    case 'mla': return `${a}. "${t}." ${jv}, ${y}.${u}`;
-    case 'chicago': return `${a}. "${t}." ${jv} (${y}).${u}`;
-    case 'vancouver': return `${a}. ${t}. ${j}. ${y}${v?';'+v:''}.${u}`;
-    case 'jp': return `${a}（${y}）${t}${j?' '+j:''}${v?' '+v:''}.${u}`;
-    default: return `${a} (${y}). ${t}.${u}`;
-  }
-}
-
-function renderExportCheckboxes() {
-  const c = document.getElementById('exportCheckboxes');
-  if (!c) return;
-  if (!refs.length) { c.innerHTML='<div class="empty-state">文献がありません</div>'; return; }
-  c.innerHTML = refs.map(r => `
+function renderExportCheckboxes(){
+  const c=document.getElementById('exportCheckboxes');if(!c)return;
+  if(!refs.length){c.innerHTML='<div class="empty-state">文献がありません</div>';return;}
+  c.innerHTML=refs.map(r=>`
     <label class="checkbox-item">
       <input type="checkbox" value="${r.id}" onchange="updateOutput()">
       <span>${r.title||'（タイトルなし）'}${r.year?' ('+r.year+')':''}</span>
-    </label>
-  `).join('');
+    </label>`).join('');
 }
-
-function updateOutput() {
-  const fmt = document.getElementById('citationFormat')?.value||'apa';
-  const checked = [...document.querySelectorAll('#exportCheckboxes input:checked')].map(cb=>cb.value);
-  const out = document.getElementById('exportOutput');
-  if (!out) return;
-  if (!checked.length) { out.textContent='文献を選択してください'; return; }
-  out.textContent = checked.map((id,i) => {
-    const r = refs.find(x=>x.id===id);
-    return r ? `[${i+1}] ${formatCitation(r, fmt)}` : '';
-  }).filter(Boolean).join('\n\n');
+function updateOutput(){
+  const fmt=document.getElementById('citationFormat')?.value||'apa';
+  const checked=[...document.querySelectorAll('#exportCheckboxes input:checked')].map(cb=>cb.value);
+  const out=document.getElementById('exportOutput');if(!out)return;
+  if(!checked.length){out.textContent='文献を選択してください';return;}
+  out.textContent=checked.map((id,i)=>{const r=refs.find(x=>x.id===id);return r?`[${i+1}] ${formatCitation(r,fmt)}`:''}).filter(Boolean).join('\n\n');
 }
+function selectAll(){document.querySelectorAll('#exportCheckboxes input').forEach(cb=>cb.checked=true);updateOutput();}
+function deselectAll(){document.querySelectorAll('#exportCheckboxes input').forEach(cb=>cb.checked=false);updateOutput();}
+function copyOutput(){navigator.clipboard.writeText(document.getElementById('exportOutput').textContent).then(()=>toast('コピーしました'));}
 
-function selectAll() { document.querySelectorAll('#exportCheckboxes input').forEach(cb=>cb.checked=true); updateOutput(); }
-function deselectAll() { document.querySelectorAll('#exportCheckboxes input').forEach(cb=>cb.checked=false); updateOutput(); }
-function copyOutput() { navigator.clipboard.writeText(document.getElementById('exportOutput').textContent).then(()=>toast('コピーしました')); }
-
-document.getElementById('searchInput').addEventListener('input', renderList);
-
-// Start
-if (loadConfig()) {
-  document.getElementById('setupOverlay').style.display = 'none';
-  init();
-} else {
-  setStatus('offline', '未接続');
-}
+document.getElementById('searchInput').addEventListener('input',renderList);
+if(loadConfig()){document.getElementById('setupOverlay').style.display='none';init();}
+else setStatus('offline','未接続');
 </script>
 </body>
 </html>
