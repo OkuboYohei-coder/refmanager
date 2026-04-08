@@ -6,17 +6,19 @@
 <title>文献管理システム</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg:#f7f5f0;--surface:#ffffff;--border:#e0dbd0;--border2:#ccc8bc;
+:root{
+  --bg:#f7f5f0;--surface:#fff;--border:#e0dbd0;--border2:#ccc8bc;
   --text:#1a1814;--text2:#6b6659;--text3:#a09d93;
   --accent:#2d4a3e;--accent2:#4a7c6a;--accent-light:#e8f0ec;
   --danger:#8b2f2f;--danger-light:#f5eded;
+  --checked-bg:#eaf5f0;--checked-border:#5aab8a;
   --tag1-bg:#e8f0ec;--tag1:#2d4a3e;--tag2-bg:#f0e8e0;--tag2:#6b3d1e;--tag3-bg:#e8e8f0;--tag3:#2d2d4a;
   --radius:6px;--radius-lg:10px;--shadow:0 1px 3px rgba(0,0,0,.08),0 4px 16px rgba(0,0,0,.04);
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);font-size:14px;height:100vh;overflow:hidden;display:flex;flex-direction:column;}
 
+/* Setup */
 .setup-overlay{position:fixed;inset:0;background:rgba(26,24,20,.6);display:flex;align-items:center;justify-content:center;z-index:9000;}
 .setup-card{background:var(--surface);border-radius:var(--radius-lg);padding:32px 36px;width:520px;max-width:95vw;box-shadow:0 8px 40px rgba(0,0,0,.18);}
 .setup-title{font-family:'DM Serif Display',serif;font-size:22px;margin-bottom:6px;}
@@ -29,6 +31,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);fon
 .setup-hint{font-size:11.5px;color:var(--text3);margin-top:14px;line-height:1.7;}
 .setup-hint code{font-family:monospace;background:var(--bg);padding:1px 5px;border-radius:3px;font-size:10.5px;}
 
+/* Header */
 .header{background:var(--accent);color:#fff;padding:0 24px;height:52px;display:flex;align-items:center;gap:12px;flex-shrink:0;}
 .header-title{font-family:'DM Serif Display',serif;font-size:18px;letter-spacing:.02em;flex:1;}
 .header-status{font-size:11px;opacity:.7;display:flex;align-items:center;gap:6px;}
@@ -36,104 +39,142 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);fon
 .status-dot.offline{background:#eb5757;}.status-dot.syncing{background:#f2c94c;animation:pulse 1s infinite;}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 
+/* Layout */
 .app{display:flex;flex:1;overflow:hidden;}
 .sidebar{width:280px;min-width:280px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;}
 .sidebar-search{padding:14px;border-bottom:1px solid var(--border);}
 .search-input{width:100%;padding:8px 12px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);font-size:13px;font-family:'DM Sans',sans-serif;color:var(--text);outline:none;}
 .search-input:focus{border-color:var(--accent2);}
 .ref-list{flex:1;overflow-y:auto;padding:8px;}
-.ref-item{padding:11px 13px;border-radius:var(--radius);cursor:pointer;margin-bottom:3px;border:1px solid transparent;transition:all .12s;}
+.ref-item{padding:10px 12px;border-radius:var(--radius);cursor:pointer;margin-bottom:3px;border:1px solid transparent;transition:all .12s;position:relative;}
 .ref-item:hover{background:var(--bg);border-color:var(--border);}
 .ref-item.active{background:var(--accent-light);border-color:var(--accent2);}
-.ref-item-title{font-size:13px;font-weight:500;line-height:1.4;margin-bottom:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.ref-item.checked-item{border-left:3px solid var(--checked-border);}
+.ref-item-header{display:flex;align-items:flex-start;gap:6px;}
+.ref-item-title{font-size:13px;font-weight:500;line-height:1.4;margin-bottom:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;flex:1;}
+.ref-item-badges{display:flex;gap:4px;align-items:center;flex-shrink:0;margin-top:1px;}
+.badge-check{font-size:11px;color:var(--checked-border);}
+.badge-pdf{font-size:10px;background:#e8eaf6;color:#3949ab;padding:1px 5px;border-radius:3px;font-weight:500;}
 .ref-item-meta{font-size:11px;color:var(--text3);}
 .ref-item-tags{display:flex;gap:4px;margin-top:5px;flex-wrap:wrap;}
 .tag{font-size:10px;padding:2px 7px;border-radius:20px;font-weight:500;}
 .tag-0{background:var(--tag1-bg);color:var(--tag1);}.tag-1{background:var(--tag2-bg);color:var(--tag2);}.tag-2{background:var(--tag3-bg);color:var(--tag3);}
 .sidebar-footer{padding:12px;border-top:1px solid var(--border);display:flex;gap:6px;}
 
+/* Buttons */
 .btn{padding:8px 16px;border-radius:var(--radius);border:1px solid var(--border2);font-size:13px;cursor:pointer;background:var(--surface);color:var(--text);font-family:'DM Sans',sans-serif;transition:all .12s;white-space:nowrap;}
 .btn:hover{background:var(--bg);}.btn:disabled{opacity:.5;cursor:not-allowed;}
 .btn-primary{background:var(--accent);color:#fff;border-color:transparent;}.btn-primary:hover{background:var(--accent2);}
 .btn-danger{color:var(--danger);}.btn-danger:hover{background:var(--danger-light);border-color:var(--danger);}
 .btn-sm{padding:5px 12px;font-size:12px;}
 .btn-teal{background:#1a6b3c;color:#fff;border-color:transparent;}.btn-teal:hover{background:#148035;}
+.btn-blue{background:#1a3a6b;color:#fff;border-color:transparent;}.btn-blue:hover{background:#14305a;}
 
+/* Main */
 .main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
 .welcome{flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;color:var(--text3);}
 .welcome-icon{font-family:'DM Serif Display',serif;font-size:48px;color:var(--border2);line-height:1;}
 .editor{display:none;height:100%;flex-direction:column;}
-.toolbar{padding:13px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;background:var(--surface);}
-.toolbar-title{font-family:'DM Serif Display',serif;font-size:17px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.tabs{display:flex;background:var(--surface);border-bottom:1px solid var(--border);padding:0 20px;}
-.tab{padding:11px 14px;font-size:13px;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;color:var(--text2);transition:all .12s;white-space:nowrap;}
+.toolbar{padding:12px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;background:var(--surface);}
+.toolbar-title{font-family:'DM Serif Display',serif;font-size:16px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.tabs{display:flex;background:var(--surface);border-bottom:1px solid var(--border);padding:0 20px;overflow-x:auto;}
+.tab{padding:10px 13px;font-size:12.5px;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;color:var(--text2);transition:all .12s;white-space:nowrap;}
 .tab:hover{color:var(--text);}.tab.active{color:var(--accent);border-bottom-color:var(--accent);font-weight:500;}
 .tab-content{flex:1;overflow-y:auto;background:var(--bg);}
-.tab-panel{display:none;padding:24px;max-width:780px;}.tab-panel.active{display:block;}
+.tab-panel{display:none;padding:20px;max-width:780px;}.tab-panel.active{display:block;}
 
-.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px 24px;margin-bottom:16px;box-shadow:var(--shadow);}
-.card-title{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:16px;}
-.field-group{margin-bottom:14px;}.field-group:last-child{margin-bottom:0;}
+/* Form */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px 22px;margin-bottom:14px;box-shadow:var(--shadow);}
+.card-title{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:14px;}
+.field-group{margin-bottom:13px;}.field-group:last-child{margin-bottom:0;}
 .field-label{font-size:12px;font-weight:500;color:var(--text2);margin-bottom:5px;display:block;}
 .field-input{width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:var(--radius);font-size:13px;font-family:'DM Sans',sans-serif;background:var(--surface);color:var(--text);line-height:1.5;outline:none;transition:border-color .15s;}
 .field-input:focus{border-color:var(--accent2);}
-textarea.field-input{resize:vertical;min-height:80px;}
+textarea.field-input{resize:vertical;min-height:78px;}
 .row{display:flex;gap:12px;}.row .field-group{flex:1;}
 
-.info-notice{background:var(--accent-light);border:1px solid #b8d4c8;border-radius:var(--radius);padding:11px 14px;font-size:12.5px;color:var(--accent);line-height:1.6;margin-bottom:16px;}
-.bulk-info{background:#fff8e8;border:1px solid #e8d8a0;border-radius:var(--radius);padding:12px 16px;font-size:12.5px;color:#6b4f00;line-height:1.7;margin-bottom:16px;}
-.prompt-grid{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
-.prompt-btn{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--text);text-align:left;transition:all .12s;box-shadow:var(--shadow);}
+/* Checked state card */
+.checked-card{background:var(--checked-bg);border-color:var(--checked-border);}
+.check-toggle-row{display:flex;align-items:center;gap:12px;padding:12px 0;}
+.check-toggle-label{font-size:13px;font-weight:500;flex:1;}
+.check-toggle-sub{font-size:11.5px;color:var(--text3);}
+.check-big{width:20px;height:20px;accent-color:var(--checked-border);cursor:pointer;}
+.checked-badge{display:inline-flex;align-items:center;gap:5px;background:var(--checked-bg);border:1px solid var(--checked-border);border-radius:20px;padding:3px 10px;font-size:12px;color:#1a6b3c;font-weight:500;}
+
+/* PDF tab */
+.pdf-info{background:#eef2ff;border:1px solid #c5cae9;border-radius:var(--radius);padding:11px 14px;font-size:12.5px;color:#283593;line-height:1.6;margin-bottom:14px;}
+.pdf-viewer-wrap{border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;background:var(--surface);box-shadow:var(--shadow);margin-bottom:14px;}
+.pdf-viewer-header{padding:10px 16px;background:var(--bg);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;font-size:12px;font-weight:500;color:var(--text2);}
+.pdf-viewer-header a{color:var(--accent2);font-size:12px;text-decoration:none;}
+.pdf-viewer-header a:hover{text-decoration:underline;}
+.pdf-frame{width:100%;height:520px;border:none;display:block;}
+.pdf-empty{padding:40px 20px;text-align:center;color:var(--text3);font-size:13px;}
+.pdf-upload-zone{border:2px dashed var(--border2);border-radius:var(--radius);padding:28px 20px;text-align:center;cursor:pointer;transition:all .15s;background:var(--surface);}
+.pdf-upload-zone:hover{border-color:var(--accent2);background:var(--accent-light);}
+.pdf-upload-icon{font-size:28px;margin-bottom:8px;}
+.pdf-upload-text{font-size:13px;font-weight:500;color:var(--text2);margin-bottom:3px;}
+.pdf-upload-sub{font-size:11.5px;color:var(--text3);}
+.pdf-url-row{display:flex;gap:8px;margin-top:12px;}
+
+/* Prompt buttons */
+.info-notice{background:var(--accent-light);border:1px solid #b8d4c8;border-radius:var(--radius);padding:11px 14px;font-size:12.5px;color:var(--accent);line-height:1.6;margin-bottom:14px;}
+.bulk-info{background:#fff8e8;border:1px solid #e8d8a0;border-radius:var(--radius);padding:12px 16px;font-size:12.5px;color:#6b4f00;line-height:1.7;margin-bottom:14px;}
+.prompt-grid{display:flex;flex-direction:column;gap:7px;margin-bottom:14px;}
+.prompt-btn{display:flex;align-items:center;gap:12px;padding:11px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--text);text-align:left;transition:all .12s;box-shadow:var(--shadow);}
 .prompt-btn:hover{border-color:var(--accent2);background:var(--accent-light);color:var(--accent);}
 .prompt-btn-label{flex:1;}.prompt-btn-arrow{font-size:11px;color:var(--text3);}
+.prompt-btn.pdf-btn{border-color:#c5cae9;background:#eef2ff;}
+.prompt-btn.pdf-btn:hover{border-color:#7986cb;background:#e8eaf6;color:#283593;}
 
+/* Research import */
 .import-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow);}
 .import-header{padding:12px 16px;background:var(--bg);border-bottom:1px solid var(--border);font-size:12px;font-weight:500;color:var(--text2);}
 .import-body{padding:14px;}
 .import-hint{font-size:11.5px;color:var(--text3);margin-bottom:8px;line-height:1.5;}
-textarea.import-textarea{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius);font-size:12px;font-family:'JetBrains Mono',monospace;background:var(--bg);color:var(--text);resize:vertical;min-height:100px;outline:none;line-height:1.6;}
+textarea.import-textarea{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius);font-size:12px;font-family:'JetBrains Mono',monospace;background:var(--bg);color:var(--text);resize:vertical;min-height:90px;outline:none;line-height:1.6;}
 textarea.import-textarea:focus{border-color:var(--accent2);}
 .import-actions{display:flex;gap:8px;margin-top:10px;}
 
+/* Bulk */
 .json-hint{font-size:12px;color:var(--text3);margin-bottom:8px;line-height:1.6;}
 .json-hint code{font-family:monospace;font-size:11px;background:var(--bg);padding:1px 5px;border-radius:3px;}
-textarea.json-textarea{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius);font-size:12px;font-family:'JetBrains Mono',monospace;background:var(--bg);color:var(--text);resize:vertical;min-height:140px;outline:none;line-height:1.6;}
+textarea.json-textarea{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius);font-size:12px;font-family:'JetBrains Mono',monospace;background:var(--bg);color:var(--text);resize:vertical;min-height:130px;outline:none;line-height:1.6;}
 textarea.json-textarea:focus{border-color:var(--accent2);}
-
-.bulk-preview{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow);margin-bottom:16px;}
+.bulk-preview{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow);margin-bottom:14px;}
 .bulk-preview-header{padding:12px 16px;background:var(--bg);border-bottom:1px solid var(--border);font-size:12px;font-weight:500;color:var(--text2);display:flex;align-items:center;justify-content:space-between;}
-.bulk-preview-list{max-height:300px;overflow-y:auto;}
+.bulk-preview-list{max-height:280px;overflow-y:auto;}
 .bulk-ref-row{display:flex;align-items:flex-start;gap:10px;padding:10px 16px;border-bottom:1px solid var(--border);font-size:13px;}
 .bulk-ref-row:last-child{border-bottom:none;}
 .bulk-ref-row input[type=checkbox]{accent-color:var(--accent);margin-top:3px;cursor:pointer;flex-shrink:0;}
 .bulk-ref-info{flex:1;}
 .bulk-ref-title{font-weight:500;line-height:1.4;margin-bottom:2px;}
 .bulk-ref-meta{font-size:11px;color:var(--text3);}
-.bulk-tag-row{display:flex;align-items:center;gap:8px;margin-top:6px;}
+.bulk-tag-row{display:flex;align-items:center;gap:8px;margin-top:5px;}
 .bulk-tag-label{font-size:11px;color:var(--text3);white-space:nowrap;}
 .bulk-tag-input{flex:1;padding:4px 8px;border:1px solid var(--border);border-radius:var(--radius);font-size:12px;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);outline:none;}
 .bulk-tag-input:focus{border-color:var(--accent2);}
 .bulk-actions{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
 .bulk-count{font-size:12px;color:var(--text3);margin-left:auto;}
-
-.progress-bar-wrap{height:4px;background:var(--border);border-radius:2px;margin-bottom:16px;overflow:hidden;display:none;}
+.progress-bar-wrap{height:4px;background:var(--border);border-radius:2px;margin-bottom:14px;overflow:hidden;display:none;}
 .progress-bar{height:100%;background:var(--accent2);border-radius:2px;transition:width .15s;}
 
-.export-controls{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px 20px;margin-bottom:16px;box-shadow:var(--shadow);display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+/* Export */
+.export-controls{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px 18px;margin-bottom:14px;box-shadow:var(--shadow);display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
 .export-label{font-size:12px;font-weight:500;color:var(--text2);}
-.format-select{padding:7px 12px;border:1px solid var(--border);border-radius:var(--radius);font-size:13px;font-family:'DM Sans',sans-serif;background:var(--surface);color:var(--text);outline:none;cursor:pointer;}
+.format-select{padding:6px 10px;border:1px solid var(--border);border-radius:var(--radius);font-size:13px;font-family:'DM Sans',sans-serif;background:var(--surface);color:var(--text);outline:none;cursor:pointer;}
 .export-select-actions{margin-left:auto;display:flex;gap:6px;}
-.ref-checkboxes{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:16px;box-shadow:var(--shadow);}
-.checkbox-item{display:flex;align-items:center;gap:10px;padding:10px 16px;cursor:pointer;border-bottom:1px solid var(--border);transition:background .1s;font-size:13px;}
+.ref-checkboxes{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:14px;box-shadow:var(--shadow);}
+.checkbox-item{display:flex;align-items:center;gap:10px;padding:9px 14px;cursor:pointer;border-bottom:1px solid var(--border);transition:background .1s;font-size:13px;}
 .checkbox-item:last-child{border-bottom:none;}.checkbox-item:hover{background:var(--bg);}
 .checkbox-item input[type=checkbox]{accent-color:var(--accent);cursor:pointer;}
 .output-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
 .output-title{font-size:13px;font-weight:500;color:var(--text2);}
-.citation-output{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px 20px;font-size:13px;font-family:'JetBrains Mono',monospace;line-height:1.8;color:var(--text);white-space:pre-wrap;word-break:break-all;min-height:100px;box-shadow:var(--shadow);}
+.citation-output{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px 18px;font-size:13px;font-family:'JetBrains Mono',monospace;line-height:1.8;color:var(--text);white-space:pre-wrap;word-break:break-all;min-height:80px;box-shadow:var(--shadow);}
 
+/* Toast */
 .toast{position:fixed;bottom:24px;right:24px;background:var(--accent);color:#fff;padding:10px 18px;border-radius:var(--radius);font-size:13px;z-index:9999;opacity:0;transform:translateY(8px);transition:all .2s;pointer-events:none;box-shadow:0 4px 16px rgba(0,0,0,.2);}
 .toast.show{opacity:1;transform:translateY(0);}
-.empty-state{text-align:center;padding:32px 16px;color:var(--text3);font-size:13px;}
+.empty-state{text-align:center;padding:28px 16px;color:var(--text3);font-size:13px;}
 ::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
 </style>
 </head>
@@ -157,7 +198,8 @@ textarea.json-textarea:focus{border-color:var(--accent2);}
     </div>
     <div class="setup-hint">
       SQLエディタで以下を実行してテーブルを作成：<br>
-      <code>create table references_data (id text primary key, title text, authors text, year text, journal text, volume text, url text, abstract text, citation_text text, notes text, tags text, created_at timestamp default now());</code>
+      <code>create table references_data (id text primary key, title text, authors text, year text, journal text, volume text, url text, abstract text, citation_text text, notes text, tags text, pdf_url text, checked boolean default false, created_at timestamp default now());</code><br><br>
+      既存テーブルへの追加：<code>alter table references_data add column if not exists pdf_url text; add column if not exists checked boolean default false;</code>
     </div>
   </div>
 </div>
@@ -194,18 +236,32 @@ textarea.json-textarea:focus{border-color:var(--accent2);}
     <div class="editor" id="editorState">
       <div class="toolbar">
         <div class="toolbar-title" id="editorTitle">新規文献</div>
+        <span id="toolbarCheckedBadge" style="display:none;" class="checked-badge">✓ 確認済み</span>
         <button class="btn btn-sm btn-danger" onclick="deleteRef()">削除</button>
         <button class="btn btn-sm btn-primary" id="saveBtn" onclick="saveRef()">保存</button>
       </div>
       <div class="tabs">
         <div class="tab active" onclick="showTab('info')">基本情報</div>
+        <div class="tab" onclick="showTab('pdf')">PDF</div>
         <div class="tab" onclick="showTab('research')">リサーチ</div>
         <div class="tab" onclick="showTab('bulk')">一括登録</div>
         <div class="tab" onclick="showTab('export')">引用出力</div>
       </div>
       <div class="tab-content">
 
+        <!-- 基本情報 -->
         <div class="tab-panel active" id="tab-info">
+          <!-- 確認チェックボックス -->
+          <div class="card" id="checkedCard">
+            <div class="check-toggle-row">
+              <div>
+                <div class="check-toggle-label">確認済みマーク</div>
+                <div class="check-toggle-sub">内容を読んで確認した文献にチェックを入れてください</div>
+              </div>
+              <input type="checkbox" class="check-big" id="f-checked" onchange="toggleChecked()">
+            </div>
+          </div>
+
           <div class="card">
             <div class="card-title">書誌情報</div>
             <div class="field-group">
@@ -246,9 +302,67 @@ textarea.json-textarea:focus{border-color:var(--accent2);}
           </div>
         </div>
 
+        <!-- PDF タブ -->
+        <div class="tab-panel" id="tab-pdf">
+          <div class="pdf-info">
+            PDFのURLを登録するとブラウザ内で直接閲覧できます。また「PDFを要約してClaudeに依頼」ボタンで要約依頼文をコピーできます。
+          </div>
+
+          <!-- PDF URL 登録 -->
+          <div class="card">
+            <div class="card-title">PDF の登録</div>
+            <div class="field-group">
+              <label class="field-label">PDF URL（オープンアクセス論文・Google Drive共有リンクなど）</label>
+              <div class="pdf-url-row">
+                <input class="field-input" id="f-pdf-url" placeholder="https://arxiv.org/pdf/xxxx.pdf" style="flex:1">
+                <button class="btn btn-sm btn-primary" onclick="savePdfUrl()">登録</button>
+              </div>
+            </div>
+            <div style="font-size:11.5px;color:var(--text3);margin-top:6px;line-height:1.6;">
+              ※ Google DriveのPDFは「リンクを知っている全員が閲覧可」に設定し、URLの末尾を <code style="font-family:monospace;background:var(--bg);padding:1px 4px;border-radius:3px;">/preview</code> に変更してください。
+            </div>
+          </div>
+
+          <!-- PDF ビューア -->
+          <div id="pdfViewerSection">
+            <div class="pdf-viewer-wrap" id="pdfViewerWrap" style="display:none;">
+              <div class="pdf-viewer-header">
+                <span id="pdfViewerTitle" style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></span>
+                <a id="pdfOpenLink" href="#" target="_blank">新しいタブで開く ↗</a>
+                <button class="btn btn-sm btn-danger" style="margin-left:10px;" onclick="removePdf()">削除</button>
+              </div>
+              <iframe id="pdfFrame" class="pdf-frame" src="" allowfullscreen></iframe>
+            </div>
+            <div id="pdfEmptyState" class="card">
+              <div class="pdf-empty">PDFのURLを登録するとここで閲覧できます</div>
+            </div>
+          </div>
+
+          <!-- PDF 要約依頼 -->
+          <div class="card" style="margin-top:14px;">
+            <div class="card-title">Claudeへの PDF 要約依頼</div>
+            <div class="prompt-grid">
+              <button class="prompt-btn pdf-btn" onclick="copyPdfSummaryPrompt('summary')">
+                <span>📄</span><span class="prompt-btn-label">PDFの内容を日本語で要約してください</span><span class="prompt-btn-arrow">コピー ↗</span>
+              </button>
+              <button class="prompt-btn pdf-btn" onclick="copyPdfSummaryPrompt('structured')">
+                <span>📋</span><span class="prompt-btn-label">研究目的・手法・結果・結論を構造化して要約</span><span class="prompt-btn-arrow">コピー ↗</span>
+              </button>
+              <button class="prompt-btn pdf-btn" onclick="copyPdfSummaryPrompt('json')">
+                <span>🔍</span><span class="prompt-btn-label">著者・発行年・ジャーナル・抄録をJSONで抽出</span><span class="prompt-btn-arrow">コピー ↗</span>
+              </button>
+              <button class="prompt-btn pdf-btn" onclick="copyPdfSummaryPrompt('cite')">
+                <span>📝</span><span class="prompt-btn-label">APA・MLA・和文形式の引用文を作成</span><span class="prompt-btn-arrow">コピー ↗</span>
+              </button>
+            </div>
+            <div style="font-size:11.5px;color:var(--text3);line-height:1.6;">上のボタンでコピーした依頼文をClaudeに貼り付けてください。PDFファイルをClaudeにアップロードして一緒に送ると効果的です。</div>
+          </div>
+        </div>
+
+        <!-- リサーチ -->
         <div class="tab-panel" id="tab-research">
           <div class="info-notice">下のボタンを押すとClaudeへの質問がクリップボードにコピーされます。Claudeに貼り付けて回答を受け取り、下の欄に貼り付けてください。</div>
-          <div class="card" style="margin-bottom:16px;">
+          <div class="card" style="margin-bottom:14px;">
             <div class="card-title">よく使うリサーチ質問</div>
             <div class="prompt-grid">
               <button class="prompt-btn" onclick="sendQ('この文献の著者・発行年・ジャーナル・抄録・APA引用文を調べて、以下の形式のJSONで返してください。\n```json\n{\"title\":\"\",\"authors\":\"\",\"year\":\"\",\"journal\":\"\",\"volume\":\"\",\"url\":\"\",\"abstract\":\"\",\"citationText\":\"\"}\n```')">
@@ -282,30 +396,21 @@ textarea.json-textarea:focus{border-color:var(--accent2);}
           </div>
         </div>
 
-        <!-- 一括登録タブ -->
+        <!-- 一括登録 -->
         <div class="tab-panel" id="tab-bulk">
           <div class="bulk-info">
             <strong>複数文献をまとめて登録する手順：</strong><br>
-            ① 下の「依頼文をコピー」ボタンを押す<br>
-            ② Claudeを開き、サーベイ文書（.docx）をアップロードしてコピーした依頼文を貼り付ける<br>
-            ③ ClaudeからJSON配列が返ってくる<br>
-            ④ そのJSONを下の「貼り付け欄」にペーストして「プレビュー」→「登録」
+            ① 下の「依頼文をコピー」を押す　② Claudeにサーベイ文書(.docx)をアップロードして貼り付け　③ 返ってきたJSONを下に貼り付けて「プレビュー」→「登録」
           </div>
-
           <div class="card">
             <div class="card-title">Step 1 — Claudeへの依頼文</div>
             <button class="prompt-btn" onclick="copyBulkPrompt()">
-              <span>📋</span>
-              <span class="prompt-btn-label">「文献リストをJSON配列で出力してください」依頼文をコピー</span>
-              <span class="prompt-btn-arrow">コピー ↗</span>
+              <span>📋</span><span class="prompt-btn-label">「文献リストをJSON配列で出力してください」依頼文をコピー</span><span class="prompt-btn-arrow">コピー ↗</span>
             </button>
           </div>
-
           <div class="card">
             <div class="card-title">Step 2 — Claudeの回答（JSON配列）を貼り付け</div>
-            <div class="json-hint">
-              ClaudeがJSON配列（<code>[{...}, {...}]</code>）で返した内容をそのまま貼り付けてください。コードブロック（```json）ごと貼り付けてもOKです。
-            </div>
+            <div class="json-hint">ClaudeからJSON配列（<code>[{...}, {...}]</code>）をそのまま貼り付けてください。</div>
             <textarea class="json-textarea" id="bulkJsonText" placeholder='[{"title":"論文タイトル","authors":"著者名","year":"2024","journal":"ジャーナル名","tags":"機械学習,洪水予測"}, ...]'></textarea>
             <div style="display:flex;gap:8px;margin-top:10px;align-items:center;">
               <button class="btn btn-sm btn-primary" onclick="parseBulkJson()">プレビュー</button>
@@ -313,7 +418,6 @@ textarea.json-textarea:focus{border-color:var(--accent2);}
               <span id="bulkParseStatus" style="font-size:12px;color:var(--text3);"></span>
             </div>
           </div>
-
           <div class="bulk-preview" id="bulkPreviewSection" style="display:none;">
             <div class="bulk-preview-header">
               <span id="bulkPreviewTitle">登録プレビュー</span>
@@ -324,17 +428,14 @@ textarea.json-textarea:focus{border-color:var(--accent2);}
             </div>
             <div class="bulk-preview-list" id="bulkPreviewList"></div>
           </div>
-
-          <div class="progress-bar-wrap" id="bulkProgressWrap">
-            <div class="progress-bar" id="bulkProgressBar" style="width:0%"></div>
-          </div>
-
+          <div class="progress-bar-wrap" id="bulkProgressWrap"><div class="progress-bar" id="bulkProgressBar" style="width:0%"></div></div>
           <div class="bulk-actions" id="bulkRegisterActions" style="display:none;">
             <button class="btn btn-primary" id="bulkRegisterBtn" onclick="registerBulk()">選択した文献を登録</button>
             <span class="bulk-count" id="bulkSelectedCount"></span>
           </div>
         </div>
 
+        <!-- 引用出力 -->
         <div class="tab-panel" id="tab-export">
           <div class="export-controls">
             <span class="export-label">フォーマット：</span>
@@ -364,10 +465,11 @@ textarea.json-textarea:focus{border-color:var(--accent2);}
 <div class="toast" id="toast"></div>
 
 <script>
-const CONFIG_KEY='refman_config_v2', LOCAL_KEY='refman_local_v2';
-let SUPABASE_URL='', SUPABASE_KEY='', useLocal=false;
-let refs=[], currentId=null, bulkCandidates=[];
+const CONFIG_KEY='refman_config_v3',LOCAL_KEY='refman_local_v3';
+let SUPABASE_URL='',SUPABASE_KEY='',useLocal=false;
+let refs=[],currentId=null,bulkCandidates=[];
 
+// ===== Setup =====
 function loadConfig(){
   try{const c=JSON.parse(localStorage.getItem(CONFIG_KEY)||'{}');
     if(c.url&&c.key){SUPABASE_URL=c.url.replace(/\/$/,'');SUPABASE_KEY=c.key;return true;}}catch(e){}return false;
@@ -387,23 +489,24 @@ function showSetup(){
   if(c.key)document.getElementById('setupKey').value=c.key;
   document.getElementById('setupOverlay').style.display='flex';
 }
-function setStatus(state,text){
-  document.getElementById('statusDot').className='status-dot'+(state==='online'?'':state==='syncing'?' syncing':' offline');
-  document.getElementById('statusText').textContent=text;
+function setStatus(s,t){
+  document.getElementById('statusDot').className='status-dot'+(s==='online'?'':s==='syncing'?' syncing':' offline');
+  document.getElementById('statusText').textContent=t;
 }
 
-async function sbFetch(path,options={}){
-  const res=await fetch(SUPABASE_URL+'/rest/v1/'+path,{...options,headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':'return=representation',...(options.headers||{})}});
+// ===== Supabase =====
+async function sbFetch(path,opts={}){
+  const res=await fetch(SUPABASE_URL+'/rest/v1/'+path,{...opts,headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':'return=representation',...(opts.headers||{})}});
   if(!res.ok){const e=await res.text();throw new Error(e);}
   const t=await res.text();return t?JSON.parse(t):[];
 }
-function rowToRef(r){return{id:r.id,title:r.title||'',authors:r.authors||'',year:r.year||'',journal:r.journal||'',volume:r.volume||'',url:r.url||'',abstract:r.abstract||'',citationText:r.citation_text||'',notes:r.notes||'',tags:r.tags?r.tags.split(',').map(t=>t.trim()).filter(Boolean):[]};}
-function refToRow(r){return{id:r.id,title:r.title,authors:r.authors,year:r.year,journal:r.journal,volume:r.volume,url:r.url,abstract:r.abstract,citation_text:r.citationText,notes:r.notes,tags:(r.tags||[]).join(', ')};}
-
+function rowToRef(r){return{id:r.id,title:r.title||'',authors:r.authors||'',year:r.year||'',journal:r.journal||'',volume:r.volume||'',url:r.url||'',abstract:r.abstract||'',citationText:r.citation_text||'',notes:r.notes||'',tags:r.tags?r.tags.split(',').map(t=>t.trim()).filter(Boolean):[],pdfUrl:r.pdf_url||'',checked:!!r.checked};}
+function refToRow(r){return{id:r.id,title:r.title,authors:r.authors,year:r.year,journal:r.journal,volume:r.volume,url:r.url,abstract:r.abstract,citation_text:r.citationText,notes:r.notes,tags:(r.tags||[]).join(', '),pdf_url:r.pdfUrl||'',checked:!!r.checked};}
 async function fetchRefs(){setStatus('syncing','同期中...');const rows=await sbFetch('references_data?order=created_at.desc');refs=rows.map(rowToRef);setStatus('online','Supabase 同期済み');}
 async function upsertRef(r){await sbFetch('references_data',{method:'POST',headers:{'Prefer':'resolution=merge-duplicates,return=representation'},body:JSON.stringify(refToRow(r))});}
 async function deleteRefRemote(id){await sbFetch('references_data?id=eq.'+id,{method:'DELETE'});}
 
+// ===== Local =====
 function loadLocal(){try{const d=localStorage.getItem(LOCAL_KEY);if(d)refs=JSON.parse(d);}catch(e){}renderAll();}
 function saveLocal(){try{localStorage.setItem(LOCAL_KEY,JSON.stringify(refs));}catch(e){}}
 
@@ -413,23 +516,30 @@ async function init(){
   catch(e){setStatus('offline','接続失敗');toast('Supabase接続失敗。設定を確認してください。');}
 }
 function renderAll(){renderList();if(refs.length>0&&!currentId)selectRef(refs[0].id);}
-
 function genId(){return Date.now()+Math.random().toString(36).slice(2,5);}
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
 
+// ===== List =====
 function renderList(){
   const q=document.getElementById('searchInput').value.toLowerCase();
   const list=document.getElementById('refList');
   const filtered=refs.filter(r=>(r.title||'').toLowerCase().includes(q)||(r.authors||'').toLowerCase().includes(q));
   if(!filtered.length){list.innerHTML='<div class="empty-state">文献がありません</div>';return;}
   list.innerHTML=filtered.map(r=>`
-    <div class="ref-item ${r.id===currentId?'active':''}" onclick="selectRef('${r.id}')">
-      <div class="ref-item-title">${r.title||'（タイトルなし）'}</div>
+    <div class="ref-item ${r.id===currentId?'active':''} ${r.checked?'checked-item':''}" onclick="selectRef('${r.id}')">
+      <div class="ref-item-header">
+        <div class="ref-item-title">${r.title||'（タイトルなし）'}</div>
+        <div class="ref-item-badges">
+          ${r.checked?'<span class="badge-check">✓</span>':''}
+          ${r.pdfUrl?'<span class="badge-pdf">PDF</span>':''}
+        </div>
+      </div>
       <div class="ref-item-meta">${[r.authors,r.year].filter(Boolean).join(' · ')}</div>
       ${(r.tags||[]).length?`<div class="ref-item-tags">${r.tags.slice(0,3).map((t,i)=>`<span class="tag tag-${i%3}">${t}</span>`).join('')}</div>`:''}
     </div>`).join('');
 }
 
+// ===== Select / Edit =====
 function selectRef(id){
   currentId=id;const r=refs.find(x=>x.id===id);if(!r)return;
   document.getElementById('welcomeState').style.display='none';
@@ -439,11 +549,37 @@ function selectRef(id){
   document.getElementById('f-citation-text').value=r.citationText||'';
   document.getElementById('f-notes').value=r.notes||'';
   document.getElementById('f-tags').value=(r.tags||[]).join(', ');
+  document.getElementById('f-pdf-url').value=r.pdfUrl||'';
+  document.getElementById('f-checked').checked=!!r.checked;
+  updateCheckedUI(r.checked);
+  renderPdfViewer(r.pdfUrl);
   renderList();showTab('info');
 }
 
+function updateCheckedUI(checked){
+  const card=document.getElementById('checkedCard');
+  const badge=document.getElementById('toolbarCheckedBadge');
+  card.className='card'+(checked?' checked-card':'');
+  badge.style.display=checked?'inline-flex':'none';
+}
+
+async function toggleChecked(){
+  if(!currentId)return;
+  const checked=document.getElementById('f-checked').checked;
+  updateCheckedUI(checked);
+  const idx=refs.findIndex(x=>x.id===currentId);
+  if(idx<0)return;
+  refs[idx].checked=checked;
+  try{
+    if(useLocal)saveLocal();
+    else{setStatus('syncing','保存中...');await upsertRef(refs[idx]);setStatus('online','Supabase 同期済み');}
+    renderList();
+    toast(checked?'✓ 確認済みにしました':'確認済みを解除しました');
+  }catch(e){toast('保存失敗: '+e.message);}
+}
+
 function newRef(){
-  const r={id:genId(),title:'',authors:'',year:'',journal:'',volume:'',url:'',abstract:'',citationText:'',notes:'',tags:[]};
+  const r={id:genId(),title:'',authors:'',year:'',journal:'',volume:'',url:'',abstract:'',citationText:'',notes:'',tags:[],pdfUrl:'',checked:false};
   refs.unshift(r);if(useLocal)saveLocal();selectRef(r.id);
 }
 
@@ -462,6 +598,8 @@ async function saveRef(){
     citationText:document.getElementById('f-citation-text').value.trim(),
     notes:document.getElementById('f-notes').value.trim(),
     tags:document.getElementById('f-tags').value.split(',').map(t=>t.trim()).filter(Boolean),
+    pdfUrl:document.getElementById('f-pdf-url').value.trim(),
+    checked:document.getElementById('f-checked').checked,
   };
   try{
     if(useLocal)saveLocal();else{setStatus('syncing','保存中...');await upsertRef(refs[idx]);setStatus('online','Supabase 同期済み');}
@@ -484,30 +622,77 @@ async function deleteRef(){
   }catch(e){toast('削除失敗: '+e.message);}
 }
 
+// ===== Tabs =====
 function showTab(name){
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   const panel=document.getElementById('tab-'+name);if(panel)panel.classList.add('active');
-  const names=['info','research','bulk','export'];
+  const names=['info','pdf','research','bulk','export'];
   const tabs=document.querySelectorAll('.tab');
   const i=names.indexOf(name);if(i>=0&&tabs[i])tabs[i].classList.add('active');
   if(name==='export')renderExportCheckboxes();
 }
-
 function showTabGlobal(name){
-  if(!currentId&&refs.length>0)selectRef(refs[0].id);else if(!currentId)return;
-  showTab(name);
+  if(!currentId&&refs.length>0)selectRef(refs[0].id);else if(!currentId)return;showTab(name);
 }
-
 function openBulk(){
   if(!currentId){
     document.getElementById('welcomeState').style.display='none';
     document.getElementById('editorState').style.display='flex';
     document.getElementById('editorTitle').textContent='一括登録';
-  }
-  showTab('bulk');
+  }showTab('bulk');
 }
 
+// ===== PDF =====
+function renderPdfViewer(url){
+  const wrap=document.getElementById('pdfViewerWrap');
+  const empty=document.getElementById('pdfEmptyState');
+  const frame=document.getElementById('pdfFrame');
+  const link=document.getElementById('pdfOpenLink');
+  const titleEl=document.getElementById('pdfViewerTitle');
+  if(url){
+    wrap.style.display='block';empty.style.display='none';
+    frame.src=url;
+    link.href=url;
+    titleEl.textContent=url.split('/').pop()||url;
+  }else{
+    wrap.style.display='none';empty.style.display='block';
+    frame.src='';
+  }
+}
+
+function savePdfUrl(){
+  const url=document.getElementById('f-pdf-url').value.trim();
+  if(!currentId)return;
+  const idx=refs.findIndex(x=>x.id===currentId);if(idx<0)return;
+  refs[idx].pdfUrl=url;
+  renderPdfViewer(url);
+  renderList();
+  toast(url?'PDFを登録しました。保存ボタンで確定してください。':'PDFを削除しました。');
+}
+
+function removePdf(){
+  document.getElementById('f-pdf-url').value='';
+  savePdfUrl();
+}
+
+function copyPdfSummaryPrompt(type){
+  const r=refs.find(x=>x.id===currentId);
+  const title=r?r.title:'（タイトル未入力）';
+  const pdfUrl=r&&r.pdfUrl?`\nPDF URL: ${r.pdfUrl}`:'';
+  let msg='';
+  if(type==='summary')
+    msg=`以下の論文PDFを日本語で要約してください。主な貢献・手法・結果・限界を含めてください。\n\n文献タイトル：${title}${pdfUrl}`;
+  else if(type==='structured')
+    msg=`以下の論文PDFについて、①研究目的、②手法、③主な結果、④結論・意義、⑤限界・今後の課題 の構成で日本語で要約してください。\n\n文献タイトル：${title}${pdfUrl}`;
+  else if(type==='json')
+    msg=`以下の論文PDFから書誌情報を抽出し、JSON形式で返してください。\n\n\`\`\`json\n{"title":"","authors":"","year":"","journal":"","volume":"","url":"","abstract":"","citationText":""}\n\`\`\`\n\n文献タイトル：${title}${pdfUrl}`;
+  else if(type==='cite')
+    msg=`以下の論文のAPA形式・MLA形式・和文形式の引用文を作成してください。\n\n文献タイトル：${title}${pdfUrl}`;
+  navigator.clipboard.writeText(msg).then(()=>toast('依頼文をコピーしました。ClaudeにPDFと一緒に貼り付けてください。'));
+}
+
+// ===== Research =====
 function getRefInfo(){
   const title=document.getElementById('f-title').value||'（タイトル未入力）';
   const authors=document.getElementById('f-authors').value;
@@ -515,10 +700,8 @@ function getRefInfo(){
   const journal=document.getElementById('f-journal').value;
   const url=document.getElementById('f-url').value;
   let info=`文献タイトル：${title}`;
-  if(authors)info+=`\n著者：${authors}`;
-  if(year)info+=`\n発行年：${year}`;
-  if(journal)info+=`\nジャーナル：${journal}`;
-  if(url)info+=`\nURL/DOI：${url}`;
+  if(authors)info+=`\n著者：${authors}`;if(year)info+=`\n発行年：${year}`;
+  if(journal)info+=`\nジャーナル：${journal}`;if(url)info+=`\nURL/DOI：${url}`;
   return info;
 }
 function sendQ(q){navigator.clipboard.writeText(`【文献情報】\n${getRefInfo()}\n\n【質問】\n${q}`).then(()=>toast('質問をコピーしました。Claudeに貼り付けてください。'));}
@@ -541,28 +724,11 @@ function importFromText(){
   }catch(e){toast('JSON解析エラー：有効なJSONを貼り付けてください');}
 }
 
-// ===== 一括登録 =====
+// ===== Bulk =====
 function copyBulkPrompt(){
-  const msg=`添付の文書に含まれる文献リストを、以下のJSON配列形式で全件出力してください。
-コードブロック（\`\`\`json）で囲んで返してください。不明な項目は空文字にしてください。
-
-[
-  {
-    "title": "論文タイトル",
-    "authors": "著者名（カンマ区切り）",
-    "year": "発行年",
-    "journal": "ジャーナル・出版社名",
-    "volume": "巻・号・ページ",
-    "url": "URL・DOI",
-    "abstract": "抄録・概要（わかれば）",
-    "citationText": "APA形式の引用文",
-    "notes": "備考・メモ",
-    "tags": "タグ1,タグ2"
-  }
-]`;
+  const msg=`添付の文書に含まれる文献リストを、以下のJSON配列形式で全件出力してください。\nコードブロック（\`\`\`json）で囲んで返してください。不明な項目は空文字にしてください。\n\n[\n  {\n    "title": "論文タイトル",\n    "authors": "著者名（カンマ区切り）",\n    "year": "発行年",\n    "journal": "ジャーナル・出版社名",\n    "volume": "巻・号・ページ",\n    "url": "URL・DOI",\n    "abstract": "抄録・概要（わかれば）",\n    "citationText": "APA形式の引用文",\n    "notes": "備考・メモ",\n    "tags": "タグ1,タグ2"\n  }\n]`;
   navigator.clipboard.writeText(msg).then(()=>toast('依頼文をコピーしました。Claudeにサーベイ文書と一緒に貼り付けてください。'));
 }
-
 function parseBulkJson(){
   const raw=document.getElementById('bulkJsonText').value.trim();
   const status=document.getElementById('bulkParseStatus');
@@ -572,25 +738,17 @@ function parseBulkJson(){
     const arr=JSON.parse(m?m[1].trim():raw);
     if(!Array.isArray(arr)){toast('JSON配列（[...]形式）を貼り付けてください');return;}
     bulkCandidates=arr.map(item=>({
-      id:genId(),
-      title:item.title||'',
-      authors:item.authors||'',
-      year:String(item.year||''),
-      journal:item.journal||'',
-      volume:item.volume||'',
-      url:item.url||'',
-      abstract:item.abstract||'',
-      citationText:item.citationText||item.citation_text||'',
-      notes:item.notes||'',
+      id:genId(),title:item.title||'',authors:item.authors||'',year:String(item.year||''),
+      journal:item.journal||'',volume:item.volume||'',url:item.url||'',abstract:item.abstract||'',
+      citationText:item.citationText||item.citation_text||'',notes:item.notes||'',
+      pdfUrl:'',checked:false,
       tags:item.tags?item.tags.split(',').map(t=>t.trim()).filter(Boolean):[],
-      _checked:true,
-      _tagStr:item.tags||''
+      _checked:true,_tagStr:item.tags||''
     }));
     status.textContent=`${bulkCandidates.length}件を解析しました`;
     renderBulkPreview();
   }catch(e){status.textContent='解析エラー：有効なJSON配列を貼り付けてください';}
 }
-
 function renderBulkPreview(){
   document.getElementById('bulkPreviewSection').style.display='block';
   document.getElementById('bulkRegisterActions').style.display='flex';
@@ -609,7 +767,6 @@ function renderBulkPreview(){
     </div>`).join('');
   updateBulkCount();
 }
-
 function updateBulkCount(){
   const n=bulkCandidates.filter(r=>r._checked).length;
   document.getElementById('bulkSelectedCount').textContent=n+'件選択中';
@@ -617,7 +774,6 @@ function updateBulkCount(){
 }
 function selectAllBulk(){bulkCandidates.forEach((_,i)=>{bulkCandidates[i]._checked=true;const cb=document.getElementById('bc_'+i);if(cb)cb.checked=true;});updateBulkCount();}
 function deselectAllBulk(){bulkCandidates.forEach((_,i)=>{bulkCandidates[i]._checked=false;const cb=document.getElementById('bc_'+i);if(cb)cb.checked=false;});updateBulkCount();}
-
 function clearBulk(){
   document.getElementById('bulkJsonText').value='';
   document.getElementById('bulkParseStatus').textContent='';
@@ -625,11 +781,8 @@ function clearBulk(){
   document.getElementById('bulkRegisterActions').style.display='none';
   bulkCandidates=[];
 }
-
 async function registerBulk(){
-  const selected=bulkCandidates.filter(r=>r._checked).map(r=>({
-    ...r, tags:r._tagStr?r._tagStr.split(',').map(t=>t.trim()).filter(Boolean):r.tags
-  }));
+  const selected=bulkCandidates.filter(r=>r._checked).map(r=>({...r,tags:r._tagStr?r._tagStr.split(',').map(t=>t.trim()).filter(Boolean):r.tags}));
   if(!selected.length){toast('文献を選択してください');return;}
   const btn=document.getElementById('bulkRegisterBtn');btn.disabled=true;
   const wrap=document.getElementById('bulkProgressWrap');wrap.style.display='block';
@@ -637,24 +790,17 @@ async function registerBulk(){
   if(!useLocal)setStatus('syncing','一括登録中...');
   let done=0,failed=0;
   for(const r of selected){
-    try{
-      if(useLocal)refs.unshift(r);
-      else{await upsertRef(r);refs.unshift(r);}
-    }catch(e){failed++;}
-    done++;
-    bar.style.width=Math.round(done/selected.length*100)+'%';
+    try{if(useLocal)refs.unshift(r);else{await upsertRef(r);refs.unshift(r);}}catch(e){failed++;}
+    done++;bar.style.width=Math.round(done/selected.length*100)+'%';
   }
-  if(useLocal)saveLocal();
-  else setStatus('online','Supabase 同期済み');
-  renderList();
-  setTimeout(()=>{wrap.style.display='none';bar.style.width='0%';},400);
+  if(useLocal)saveLocal();else setStatus('online','Supabase 同期済み');
+  renderList();setTimeout(()=>{wrap.style.display='none';bar.style.width='0%';},400);
   btn.disabled=false;
   toast(failed?`${done-failed}件登録完了（${failed}件失敗）`:`${selected.length}件を登録しました`);
-  clearBulk();
-  if(refs.length>0)selectRef(refs[0].id);
+  clearBulk();if(refs.length>0)selectRef(refs[0].id);
 }
 
-// ===== 引用出力 =====
+// ===== Export =====
 function formatCitation(r,fmt){
   const a=r.authors||'著者不明',y=r.year||'n.d.',t=r.title||'（タイトルなし）';
   const j=r.journal||'',v=r.volume||'',u=r.url?'\n    '+r.url:'';
@@ -674,7 +820,7 @@ function renderExportCheckboxes(){
   c.innerHTML=refs.map(r=>`
     <label class="checkbox-item">
       <input type="checkbox" value="${r.id}" onchange="updateOutput()">
-      <span>${r.title||'（タイトルなし）'}${r.year?' ('+r.year+')':''}</span>
+      <span>${r.checked?'✓ ':''}<strong>${r.title||'（タイトルなし）'}</strong>${r.year?' ('+r.year+')':''}${r.pdfUrl?' 📄':''}</span>
     </label>`).join('');
 }
 function updateOutput(){
