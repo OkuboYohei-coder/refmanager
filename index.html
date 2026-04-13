@@ -39,27 +39,43 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);fon
 .status-dot.offline{background:#eb5757;}.status-dot.syncing{background:#f2c94c;animation:pulse 1s infinite;}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 
-/* Layout */
-.app{display:flex;flex:1;overflow:hidden;}
-.sidebar{width:280px;min-width:280px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;}
-.sidebar-search{padding:14px;border-bottom:1px solid var(--border);}
-.search-input{width:100%;padding:8px 12px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);font-size:13px;font-family:'DM Sans',sans-serif;color:var(--text);outline:none;}
+/* Layout — top table + bottom editor */
+.app{display:flex;flex-direction:column;flex:1;overflow:hidden;}
+.list-pane{display:flex;flex-direction:column;background:var(--surface);border-bottom:2px solid var(--border2);flex-shrink:0;}
+.list-toolbar{padding:9px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);}
+.search-input{padding:7px 12px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);font-size:13px;font-family:'DM Sans',sans-serif;color:var(--text);outline:none;width:240px;}
 .search-input:focus{border-color:var(--accent2);}
-.ref-list{flex:1;overflow-y:auto;padding:8px;}
-.ref-item{padding:10px 12px;border-radius:var(--radius);cursor:pointer;margin-bottom:3px;border:1px solid transparent;transition:all .12s;position:relative;}
-.ref-item:hover{background:var(--bg);border-color:var(--border);}
-.ref-item.active{background:var(--accent-light);border-color:var(--accent2);}
-.ref-item.checked-item{border-left:3px solid var(--checked-border);}
-.ref-item-header{display:flex;align-items:flex-start;gap:6px;}
-.ref-item-title{font-size:13px;font-weight:500;line-height:1.4;margin-bottom:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;flex:1;}
-.ref-item-badges{display:flex;gap:4px;align-items:center;flex-shrink:0;margin-top:1px;}
-.badge-check{font-size:11px;color:var(--checked-border);}
-.badge-pdf{font-size:10px;background:#e8eaf6;color:#3949ab;padding:1px 5px;border-radius:3px;font-weight:500;}
-.ref-item-meta{font-size:11px;color:var(--text3);}
-.ref-item-tags{display:flex;gap:4px;margin-top:5px;flex-wrap:wrap;}
-.tag{font-size:10px;padding:2px 7px;border-radius:20px;font-weight:500;}
+.list-count{font-size:12px;color:var(--text3);}
+.ref-table-wrap{overflow-y:auto;max-height:240px;}
+.ref-table{width:100%;border-collapse:collapse;table-layout:fixed;}
+.ref-table thead th{position:sticky;top:0;z-index:1;background:var(--bg);padding:6px 12px;text-align:left;font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);border-bottom:1px solid var(--border);white-space:nowrap;cursor:pointer;user-select:none;}
+.ref-table thead th:hover{color:var(--text2);}
+.ref-table thead th.col-sort{color:var(--accent);}
+.col-check{width:34px;text-align:center !important;}
+.col-title{width:26%;}
+.col-authors{width:16%;}
+.col-year{width:56px;text-align:center !important;}
+.col-abstract{width:auto;}
+.col-tags{width:14%;}
+.col-badges{width:52px;text-align:center !important;}
+.ref-table tbody tr{cursor:pointer;transition:background .1s;border-bottom:1px solid var(--border);}
+.ref-table tbody tr:last-child{border-bottom:none;}
+.ref-table tbody tr:hover td{background:var(--bg);}
+.ref-table tbody tr.row-active td{background:var(--accent-light);}
+.ref-table tbody tr.row-checked td.col-check{border-left:3px solid var(--checked-border);}
+.ref-table td{padding:7px 12px;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:middle;}
+.ref-table td.col-check,.ref-table td.col-year,.ref-table td.col-badges{text-align:center;padding:7px 4px;}
+.td-title{font-weight:500;}
+.td-abstract{color:var(--text2);font-size:12px;}
+.td-authors{color:var(--text2);font-size:12px;}
+.td-year{color:var(--text3);font-size:12px;}
+.td-tags{display:flex;gap:3px;overflow:hidden;}
+.tag{font-size:10px;padding:2px 7px;border-radius:20px;font-weight:500;white-space:nowrap;}
 .tag-0{background:var(--tag1-bg);color:var(--tag1);}.tag-1{background:var(--tag2-bg);color:var(--tag2);}.tag-2{background:var(--tag3-bg);color:var(--tag3);}
-.sidebar-footer{padding:12px;border-top:1px solid var(--border);display:flex;gap:6px;}
+.badge-check{font-size:13px;color:var(--checked-border);}
+.badge-pdf{font-size:10px;background:#e8eaf6;color:#3949ab;padding:1px 5px;border-radius:3px;font-weight:500;}
+.list-footer{padding:9px 16px;border-top:1px solid var(--border);display:flex;gap:8px;align-items:center;}
+.editor-pane{flex:1;overflow:hidden;display:flex;flex-direction:column;min-height:0;}
 
 /* Buttons */
 .btn{padding:8px 16px;border-radius:var(--radius);border:1px solid var(--border2);font-size:13px;cursor:pointer;background:var(--surface);color:var(--text);font-family:'DM Sans',sans-serif;transition:all .12s;white-space:nowrap;}
@@ -71,10 +87,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);fon
 .btn-blue{background:#1a3a6b;color:#fff;border-color:transparent;}.btn-blue:hover{background:#14305a;}
 
 /* Main */
-.main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
-.welcome{flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;color:var(--text3);}
+.editor-pane-inner{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.welcome{flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;color:var(--text3);min-height:0;}
 .welcome-icon{font-family:'DM Serif Display',serif;font-size:48px;color:var(--border2);line-height:1;}
-.editor{display:none;height:100%;flex-direction:column;}
+.editor{display:flex;height:100%;flex-direction:column;overflow:hidden;}
 .toolbar{padding:12px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;background:var(--surface);}
 .toolbar-title{font-family:'DM Serif Display',serif;font-size:16px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .tabs{display:flex;background:var(--surface);border-bottom:1px solid var(--border);padding:0 20px;overflow-x:auto;}
@@ -214,23 +230,42 @@ textarea.json-textarea:focus{border-color:var(--accent2);}
 </div>
 
 <div class="app">
-  <div class="sidebar">
-    <div class="sidebar-search">
+  <!-- 上部：文献テーブル -->
+  <div class="list-pane">
+    <div class="list-toolbar">
       <input class="search-input" id="searchInput" type="text" placeholder="タイトル・著者で検索...">
+      <span class="list-count" id="listCount"></span>
+      <div style="margin-left:auto;display:flex;gap:8px;">
+        <button class="btn btn-primary btn-sm" onclick="newRef()">+ 新規</button>
+        <button class="btn btn-teal btn-sm" onclick="openBulk()">⬆ 一括</button>
+        <button class="btn btn-sm" onclick="showTabGlobal('export')">出力</button>
+      </div>
     </div>
-    <div class="ref-list" id="refList"></div>
-    <div class="sidebar-footer">
-      <button class="btn btn-primary" style="flex:1" onclick="newRef()">+ 新規</button>
-      <button class="btn btn-teal" onclick="openBulk()" title="複数文献を一括登録">⬆ 一括</button>
-      <button class="btn" onclick="showTabGlobal('export')">出力</button>
+    <div class="ref-table-wrap">
+      <table class="ref-table">
+        <thead>
+          <tr>
+            <th class="col-check" title="確認済み">✓</th>
+            <th class="col-title" onclick="sortBy('title')">タイトル <span class="sort-arrow" id="sort-title"></span></th>
+            <th class="col-authors" onclick="sortBy('authors')">著者 <span class="sort-arrow" id="sort-authors"></span></th>
+            <th class="col-year" onclick="sortBy('year')">年 <span class="sort-arrow" id="sort-year"></span></th>
+            <th class="col-abstract">概要</th>
+            <th class="col-tags">タグ</th>
+            <th class="col-badges">PDF</th>
+          </tr>
+        </thead>
+        <tbody id="refTableBody"></tbody>
+      </table>
+      <div id="refTableEmpty" class="empty-state" style="display:none;">文献がありません</div>
     </div>
   </div>
 
-  <div class="main">
+  <!-- 下部：エディタ -->
+  <div class="editor-pane">
     <div class="welcome" id="welcomeState">
       <div class="welcome-icon">❧</div>
-      <div style="font-size:15px;color:var(--text2);font-weight:500;">文献を選択または新規追加</div>
-      <div style="font-size:13px;">左のリストから選ぶか「+ 新規」または「⬆ 一括」をクリック</div>
+      <div style="font-size:15px;color:var(--text2);font-weight:500;">上の一覧から文献を選択してください</div>
+      <div style="font-size:13px;">「+ 新規」ボタンで新しい文献を追加できます</div>
     </div>
 
     <div class="editor" id="editorState">
@@ -304,38 +339,55 @@ textarea.json-textarea:focus{border-color:var(--accent2);}
 
         <!-- PDF タブ -->
         <div class="tab-panel" id="tab-pdf">
-          <div class="pdf-info">
-            PDFのURLを登録するとブラウザ内で直接閲覧できます。また「PDFを要約してClaudeに依頼」ボタンで要約依頼文をコピーできます。
+
+          <!-- GitHub Pages ベースURL設定 -->
+          <div class="card">
+            <div class="card-title">GitHub Pages の設定</div>
+            <div class="field-group">
+              <label class="field-label">あなたのサイトのベースURL</label>
+              <div class="pdf-url-row">
+                <input class="field-input" id="githubBaseUrl" placeholder="https://ユーザー名.github.io/refmanager" style="flex:1">
+                <button class="btn btn-sm btn-primary" onclick="saveBaseUrl()">保存</button>
+              </div>
+            </div>
+            <div style="font-size:11.5px;color:var(--text3);margin-top:6px;line-height:1.7;">
+              設定すると、ファイル名だけ入力すれば自動でURLが生成されます。<br>
+              PDFはGitHubリポジトリの <code style="font-family:monospace;background:var(--bg);padding:1px 4px;border-radius:3px;">papers/</code> フォルダに入れてください。
+            </div>
           </div>
 
-          <!-- PDF URL 登録 -->
+          <!-- PDF 登録 -->
           <div class="card">
             <div class="card-title">PDF の登録</div>
             <div class="field-group">
-              <label class="field-label">PDF URL（オープンアクセス論文・Google Drive共有リンクなど）</label>
+              <label class="field-label">ファイル名（papers/ フォルダ内のPDFファイル名）</label>
+              <div class="pdf-url-row">
+                <input class="field-input" id="f-pdf-filename" placeholder="yamamoto2024.pdf" style="flex:1" oninput="updatePdfUrlPreview()">
+                <button class="btn btn-sm btn-primary" onclick="savePdfFromFilename()">登録</button>
+              </div>
+              <div id="pdfUrlPreview" style="font-size:11.5px;color:var(--accent2);margin-top:5px;font-family:monospace;display:none;"></div>
+            </div>
+            <div style="border-top:1px solid var(--border);margin:12px 0 12px;"></div>
+            <div class="field-group" style="margin-bottom:0;">
+              <label class="field-label">またはフルURLを直接入力（ArXivなど）</label>
               <div class="pdf-url-row">
                 <input class="field-input" id="f-pdf-url" placeholder="https://arxiv.org/pdf/xxxx.pdf" style="flex:1">
                 <button class="btn btn-sm btn-primary" onclick="savePdfUrl()">登録</button>
               </div>
             </div>
-            <div style="font-size:11.5px;color:var(--text3);margin-top:6px;line-height:1.6;">
-              ※ Google DriveのPDFは「リンクを知っている全員が閲覧可」に設定し、URLの末尾を <code style="font-family:monospace;background:var(--bg);padding:1px 4px;border-radius:3px;">/preview</code> に変更してください。
-            </div>
           </div>
 
           <!-- PDF ビューア -->
-          <div id="pdfViewerSection">
-            <div class="pdf-viewer-wrap" id="pdfViewerWrap" style="display:none;">
-              <div class="pdf-viewer-header">
-                <span id="pdfViewerTitle" style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></span>
-                <a id="pdfOpenLink" href="#" target="_blank">新しいタブで開く ↗</a>
-                <button class="btn btn-sm btn-danger" style="margin-left:10px;" onclick="removePdf()">削除</button>
-              </div>
-              <iframe id="pdfFrame" class="pdf-frame" src="" allowfullscreen></iframe>
+          <div class="pdf-viewer-wrap" id="pdfViewerWrap" style="display:none;">
+            <div class="pdf-viewer-header">
+              <span id="pdfViewerTitle" style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:monospace;font-size:11px;"></span>
+              <a id="pdfOpenLink" href="#" target="_blank" style="white-space:nowrap;">新しいタブで開く ↗</a>
+              <button class="btn btn-sm btn-danger" style="margin-left:10px;" onclick="removePdf()">削除</button>
             </div>
-            <div id="pdfEmptyState" class="card">
-              <div class="pdf-empty">PDFのURLを登録するとここで閲覧できます</div>
-            </div>
+            <iframe id="pdfFrame" class="pdf-frame" src="" allowfullscreen></iframe>
+          </div>
+          <div id="pdfEmptyState" class="card">
+            <div class="pdf-empty">PDFを登録するとここで閲覧できます</div>
           </div>
 
           <!-- PDF 要約依頼 -->
@@ -355,7 +407,7 @@ textarea.json-textarea:focus{border-color:var(--accent2);}
                 <span>📝</span><span class="prompt-btn-label">APA・MLA・和文形式の引用文を作成</span><span class="prompt-btn-arrow">コピー ↗</span>
               </button>
             </div>
-            <div style="font-size:11.5px;color:var(--text3);line-height:1.6;">上のボタンでコピーした依頼文をClaudeに貼り付けてください。PDFファイルをClaudeにアップロードして一緒に送ると効果的です。</div>
+            <div style="font-size:11.5px;color:var(--text3);line-height:1.6;">PDFファイルをClaudeにアップロードして、コピーした依頼文と一緒に送ってください。</div>
           </div>
         </div>
 
@@ -520,23 +572,45 @@ function genId(){return Date.now()+Math.random().toString(36).slice(2,5);}
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
 
 // ===== List =====
+let sortKey='',sortAsc=true;
+
+function sortBy(key){
+  if(sortKey===key){sortAsc=!sortAsc;}else{sortKey=key;sortAsc=true;}
+  ['title','authors','year'].forEach(k=>{
+    const el=document.getElementById('sort-'+k);
+    if(el)el.textContent=k===sortKey?(sortAsc?'▲':'▼'):'';
+    const th=el&&el.closest('th');
+    if(th)th.classList.toggle('col-sort',k===sortKey);
+  });
+  renderList();
+}
+
 function renderList(){
   const q=document.getElementById('searchInput').value.toLowerCase();
-  const list=document.getElementById('refList');
-  const filtered=refs.filter(r=>(r.title||'').toLowerCase().includes(q)||(r.authors||'').toLowerCase().includes(q));
-  if(!filtered.length){list.innerHTML='<div class="empty-state">文献がありません</div>';return;}
-  list.innerHTML=filtered.map(r=>`
-    <div class="ref-item ${r.id===currentId?'active':''} ${r.checked?'checked-item':''}" onclick="selectRef('${r.id}')">
-      <div class="ref-item-header">
-        <div class="ref-item-title">${r.title||'（タイトルなし）'}</div>
-        <div class="ref-item-badges">
-          ${r.checked?'<span class="badge-check">✓</span>':''}
-          ${r.pdfUrl?'<span class="badge-pdf">PDF</span>':''}
-        </div>
-      </div>
-      <div class="ref-item-meta">${[r.authors,r.year].filter(Boolean).join(' · ')}</div>
-      ${(r.tags||[]).length?`<div class="ref-item-tags">${r.tags.slice(0,3).map((t,i)=>`<span class="tag tag-${i%3}">${t}</span>`).join('')}</div>`:''}
-    </div>`).join('');
+  let filtered=refs.filter(r=>(r.title||'').toLowerCase().includes(q)||(r.authors||'').toLowerCase().includes(q)||(r.abstract||'').toLowerCase().includes(q));
+  if(sortKey){
+    filtered=[...filtered].sort((a,b)=>{
+      const av=(a[sortKey]||'').toString().toLowerCase();
+      const bv=(b[sortKey]||'').toString().toLowerCase();
+      return sortAsc?av.localeCompare(bv,'ja'):bv.localeCompare(av,'ja');
+    });
+  }
+  const tbody=document.getElementById('refTableBody');
+  const empty=document.getElementById('refTableEmpty');
+  const countEl=document.getElementById('listCount');
+  if(countEl)countEl.textContent=filtered.length+'件';
+  if(!filtered.length){tbody.innerHTML='';empty.style.display='block';return;}
+  empty.style.display='none';
+  tbody.innerHTML=filtered.map(r=>`
+    <tr class="${r.id===currentId?'row-active':''} ${r.checked?'row-checked':''}" onclick="selectRef('${r.id}')">
+      <td class="col-check">${r.checked?'<span class="badge-check">✓</span>':''}</td>
+      <td class="col-title"><span class="td-title">${r.title||'（タイトルなし）'}</span></td>
+      <td class="col-authors"><span class="td-authors">${r.authors||''}</span></td>
+      <td class="col-year"><span class="td-year">${r.year||''}</span></td>
+      <td class="col-abstract"><span class="td-abstract">${r.abstract||''}</span></td>
+      <td class="col-tags"><div class="td-tags">${(r.tags||[]).slice(0,2).map((t,i)=>`<span class="tag tag-${i%3}">${t}</span>`).join('')}</div></td>
+      <td class="col-badges">${r.pdfUrl?'<span class="badge-pdf">PDF</span>':''}</td>
+    </tr>`).join('');
 }
 
 // ===== Select / Edit =====
@@ -550,9 +624,17 @@ function selectRef(id){
   document.getElementById('f-notes').value=r.notes||'';
   document.getElementById('f-tags').value=(r.tags||[]).join(', ');
   document.getElementById('f-pdf-url').value=r.pdfUrl||'';
+  // ファイル名欄の復元：GitHub Pages URLならファイル名を逆算
+  const base=getBaseUrl();
+  const fn=document.getElementById('f-pdf-filename');
+  if(r.pdfUrl&&base&&r.pdfUrl.startsWith(base+'/papers/')){
+    fn.value=r.pdfUrl.replace(base+'/papers/','');
+  }else{fn.value='';}
+  document.getElementById('pdfUrlPreview').style.display='none';
   document.getElementById('f-checked').checked=!!r.checked;
   updateCheckedUI(r.checked);
   renderPdfViewer(r.pdfUrl);
+  loadBaseUrl();
   renderList();showTab('info');
 }
 
@@ -644,6 +726,64 @@ function openBulk(){
 }
 
 // ===== PDF =====
+const BASE_URL_KEY='refman_github_base_url';
+
+function loadBaseUrl(){
+  const saved=localStorage.getItem(BASE_URL_KEY)||'';
+  document.getElementById('githubBaseUrl').value=saved;
+  return saved.replace(/\/$/,'');
+}
+function saveBaseUrl(){
+  const url=document.getElementById('githubBaseUrl').value.trim().replace(/\/$/,'');
+  localStorage.setItem(BASE_URL_KEY,url);
+  toast('ベースURLを保存しました');
+  updatePdfUrlPreview();
+}
+function getBaseUrl(){
+  return (localStorage.getItem(BASE_URL_KEY)||'').replace(/\/$/,'');
+}
+
+function updatePdfUrlPreview(){
+  const filename=document.getElementById('f-pdf-filename').value.trim();
+  const preview=document.getElementById('pdfUrlPreview');
+  const base=getBaseUrl();
+  if(filename&&base){
+    const full=`${base}/papers/${filename}`;
+    preview.textContent=full;
+    preview.style.display='block';
+  }else if(filename&&!base){
+    preview.textContent='⚠ ベースURLを先に設定してください';
+    preview.style.color='#8b2f2f';
+    preview.style.display='block';
+  }else{
+    preview.style.display='none';
+  }
+}
+
+function savePdfFromFilename(){
+  const filename=document.getElementById('f-pdf-filename').value.trim();
+  const base=getBaseUrl();
+  if(!filename){toast('ファイル名を入力してください');return;}
+  if(!base){toast('先にベースURLを設定してください');return;}
+  const url=`${base}/papers/${filename}`;
+  document.getElementById('f-pdf-url').value=url;
+  applyPdfUrl(url);
+}
+
+function savePdfUrl(){
+  const url=document.getElementById('f-pdf-url').value.trim();
+  applyPdfUrl(url);
+}
+
+function applyPdfUrl(url){
+  if(!currentId)return;
+  const idx=refs.findIndex(x=>x.id===currentId);if(idx<0)return;
+  refs[idx].pdfUrl=url;
+  renderPdfViewer(url);
+  renderList();
+  toast(url?'PDFを登録しました。保存ボタンで確定してください。':'PDFを削除しました。');
+}
+
 function renderPdfViewer(url){
   const wrap=document.getElementById('pdfViewerWrap');
   const empty=document.getElementById('pdfEmptyState');
@@ -654,26 +794,18 @@ function renderPdfViewer(url){
     wrap.style.display='block';empty.style.display='none';
     frame.src=url;
     link.href=url;
-    titleEl.textContent=url.split('/').pop()||url;
+    titleEl.textContent=url;
   }else{
     wrap.style.display='none';empty.style.display='block';
     frame.src='';
   }
 }
 
-function savePdfUrl(){
-  const url=document.getElementById('f-pdf-url').value.trim();
-  if(!currentId)return;
-  const idx=refs.findIndex(x=>x.id===currentId);if(idx<0)return;
-  refs[idx].pdfUrl=url;
-  renderPdfViewer(url);
-  renderList();
-  toast(url?'PDFを登録しました。保存ボタンで確定してください。':'PDFを削除しました。');
-}
-
 function removePdf(){
   document.getElementById('f-pdf-url').value='';
-  savePdfUrl();
+  document.getElementById('f-pdf-filename').value='';
+  document.getElementById('pdfUrlPreview').style.display='none';
+  applyPdfUrl('');
 }
 
 function copyPdfSummaryPrompt(type){
