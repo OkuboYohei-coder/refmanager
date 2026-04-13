@@ -187,6 +187,19 @@ textarea.json-textarea:focus{border-color:var(--accent2);}
 .output-title{font-size:13px;font-weight:500;color:var(--text2);}
 .citation-output{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px 18px;font-size:13px;font-family:'JetBrains Mono',monospace;line-height:1.8;color:var(--text);white-space:pre-wrap;word-break:break-all;min-height:80px;box-shadow:var(--shadow);}
 
+
+/* PDF Upload */
+.upload-zone{border:2px dashed var(--border2);border-radius:var(--radius);padding:24px 20px;text-align:center;cursor:pointer;transition:all .15s;background:var(--surface);position:relative;}
+.upload-zone:hover,.upload-zone.drag-over{border-color:var(--accent2);background:var(--accent-light);}
+.upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.upload-zone-icon{font-size:28px;margin-bottom:6px;}
+.upload-zone-text{font-size:13px;font-weight:500;color:var(--text2);margin-bottom:3px;}
+.upload-zone-sub{font-size:11.5px;color:var(--text3);}
+.upload-progress{margin-top:10px;display:none;}
+.upload-progress-bar-wrap{height:5px;background:var(--border);border-radius:3px;overflow:hidden;margin-bottom:6px;}
+.upload-progress-bar{height:100%;background:var(--accent2);border-radius:3px;transition:width .2s;width:0%;}
+.upload-progress-text{font-size:12px;color:var(--text2);text-align:center;}
+.github-not-configured{background:#fff8e8;border:1px solid #e8d8a0;border-radius:var(--radius);padding:10px 14px;font-size:12.5px;color:#6b4f00;line-height:1.6;}
 /* Toast */
 .toast{position:fixed;bottom:24px;right:24px;background:var(--accent);color:#fff;padding:10px 18px;border-radius:var(--radius);font-size:13px;z-index:9999;opacity:0;transform:translateY(8px);transition:all .2s;pointer-events:none;box-shadow:0 4px 16px rgba(0,0,0,.2);}
 .toast.show{opacity:1;transform:translateY(0);}
@@ -212,10 +225,29 @@ textarea.json-textarea:focus{border-color:var(--accent2);}
       <button class="btn btn-primary" onclick="saveSetup()">接続して開始</button>
       <button class="btn" onclick="useLocalMode()">ローカルモードで使う</button>
     </div>
+    <div style="border-top:1px solid var(--border);margin:20px 0 16px;"></div>
+    <div class="setup-title" style="font-size:17px;margin-bottom:6px;">GitHub 設定（PDF アップロード用）</div>
+    <div class="setup-sub" style="margin-bottom:16px;">PDFをサイトから直接アップロードするために必要です。</div>
+    <div class="setup-field">
+      <label class="setup-label">GitHub ユーザー名</label>
+      <input class="setup-input" id="ghUser" placeholder="your-username" type="text">
+    </div>
+    <div class="setup-field">
+      <label class="setup-label">リポジトリ名</label>
+      <input class="setup-input" id="ghRepo" placeholder="refmanager" type="text">
+    </div>
+    <div class="setup-field">
+      <label class="setup-label">Personal Access Token（repo スコープ）</label>
+      <input class="setup-input" id="ghToken" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" type="password">
+    </div>
+    <div class="setup-actions">
+      <button class="btn btn-primary" onclick="saveSetup()">すべて保存して開始</button>
+      <button class="btn" onclick="useLocalMode()">ローカルモードで使う</button>
+    </div>
     <div class="setup-hint">
-      SQLエディタで以下を実行してテーブルを作成：<br>
+      Supabase SQLエディタで実行：<br>
       <code>create table references_data (id text primary key, title text, authors text, year text, journal text, volume text, url text, abstract text, citation_text text, notes text, tags text, pdf_url text, checked boolean default false, created_at timestamp default now());</code><br><br>
-      既存テーブルへの追加：<code>alter table references_data add column if not exists pdf_url text; add column if not exists checked boolean default false;</code>
+      既存テーブルへの追加：<code>alter table references_data add column if not exists pdf_url text; alter table references_data add column if not exists checked boolean default false;</code>
     </div>
   </div>
 </div>
@@ -340,41 +372,36 @@ textarea.json-textarea:focus{border-color:var(--accent2);}
         <!-- PDF タブ -->
         <div class="tab-panel" id="tab-pdf">
 
-          <!-- GitHub Pages ベースURL設定 -->
+          <!-- PDF アップロード -->
           <div class="card">
-            <div class="card-title">GitHub Pages の設定</div>
-            <div class="field-group">
-              <label class="field-label">あなたのサイトのベースURL</label>
-              <div class="pdf-url-row">
-                <input class="field-input" id="githubBaseUrl" placeholder="https://ユーザー名.github.io/refmanager" style="flex:1">
-                <button class="btn btn-sm btn-primary" onclick="saveBaseUrl()">保存</button>
+            <div class="card-title">PDF をアップロード</div>
+            <div id="githubNotConfigured" class="github-not-configured" style="display:none;">
+              ⚠ GitHub設定が未完了です。「設定」ボタンからユーザー名・リポジトリ名・Access Tokenを入力してください。
+            </div>
+            <div id="uploadArea">
+              <div class="upload-zone" id="uploadZone">
+                <input type="file" accept="application/pdf" id="pdfFileInput" onchange="handleFileSelect(this.files[0])">
+                <div class="upload-zone-icon">📄</div>
+                <div class="upload-zone-text">PDFをここにドロップ、またはクリックして選択</div>
+                <div class="upload-zone-sub">papers/ フォルダに自動アップロードされます</div>
+              </div>
+              <div class="upload-progress" id="uploadProgress">
+                <div class="upload-progress-bar-wrap">
+                  <div class="upload-progress-bar" id="uploadProgressBar"></div>
+                </div>
+                <div class="upload-progress-text" id="uploadProgressText">アップロード中...</div>
               </div>
             </div>
-            <div style="font-size:11.5px;color:var(--text3);margin-top:6px;line-height:1.7;">
-              設定すると、ファイル名だけ入力すれば自動でURLが生成されます。<br>
-              PDFはGitHubリポジトリの <code style="font-family:monospace;background:var(--bg);padding:1px 4px;border-radius:3px;">papers/</code> フォルダに入れてください。
-            </div>
-          </div>
-
-          <!-- PDF 登録 -->
-          <div class="card">
-            <div class="card-title">PDF の登録</div>
-            <div class="field-group">
-              <label class="field-label">ファイル名（papers/ フォルダ内のPDFファイル名）</label>
-              <div class="pdf-url-row">
-                <input class="field-input" id="f-pdf-filename" placeholder="yamamoto2024.pdf" style="flex:1" oninput="updatePdfUrlPreview()">
-                <button class="btn btn-sm btn-primary" onclick="savePdfFromFilename()">登録</button>
-              </div>
-              <div id="pdfUrlPreview" style="font-size:11.5px;color:var(--accent2);margin-top:5px;font-family:monospace;display:none;"></div>
-            </div>
-            <div style="border-top:1px solid var(--border);margin:12px 0 12px;"></div>
+            <div style="border-top:1px solid var(--border);margin:14px 0;"></div>
             <div class="field-group" style="margin-bottom:0;">
-              <label class="field-label">またはフルURLを直接入力（ArXivなど）</label>
+              <label class="field-label">またはArXivなどのフルURLを直接入力</label>
               <div class="pdf-url-row">
                 <input class="field-input" id="f-pdf-url" placeholder="https://arxiv.org/pdf/xxxx.pdf" style="flex:1">
                 <button class="btn btn-sm btn-primary" onclick="savePdfUrl()">登録</button>
               </div>
             </div>
+            <input type="hidden" id="f-pdf-filename">
+            <div id="pdfUrlPreview" style="font-size:11.5px;color:var(--accent2);margin-top:5px;font-family:monospace;display:none;"></div>
           </div>
 
           <!-- PDF ビューア -->
@@ -517,21 +544,40 @@ textarea.json-textarea:focus{border-color:var(--accent2);}
 <div class="toast" id="toast"></div>
 
 <script>
-const CONFIG_KEY='refman_config_v3',LOCAL_KEY='refman_local_v3';
+const CONFIG_KEY='refman_config_v3',LOCAL_KEY='refman_local_v3',GH_CONFIG_KEY='refman_gh_config';
 let SUPABASE_URL='',SUPABASE_KEY='',useLocal=false;
 let refs=[],currentId=null,bulkCandidates=[];
 
 // ===== Setup =====
 function loadConfig(){
-  try{const c=JSON.parse(localStorage.getItem(CONFIG_KEY)||'{}');
-    if(c.url&&c.key){SUPABASE_URL=c.url.replace(/\/$/,'');SUPABASE_KEY=c.key;return true;}}catch(e){}return false;
+  try{
+    const c=JSON.parse(localStorage.getItem(CONFIG_KEY)||'{}');
+    if(c.url&&c.key){SUPABASE_URL=c.url.replace(/\/$/,'');SUPABASE_KEY=c.key;}
+  }catch(e){}
+  try{
+    const g=JSON.parse(localStorage.getItem(GH_CONFIG_KEY)||'{}');
+    if(g.user)document.getElementById('ghUser').value=g.user;
+    if(g.repo)document.getElementById('ghRepo').value=g.repo;
+    if(g.token)document.getElementById('ghToken').value=g.token;
+  }catch(e){}
+  try{
+    const c=JSON.parse(localStorage.getItem(CONFIG_KEY)||'{}');
+    return !!(c.url&&c.key);
+  }catch(e){return false;}
 }
 function saveSetup(){
   const url=document.getElementById('setupUrl').value.trim().replace(/\/$/,'');
   const key=document.getElementById('setupKey').value.trim();
-  if(!url||!key){toast('URLとKeyを両方入力してください');return;}
+  if(!url||!key){toast('SupabaseのURLとKeyを両方入力してください');return;}
   SUPABASE_URL=url;SUPABASE_KEY=key;useLocal=false;
   localStorage.setItem(CONFIG_KEY,JSON.stringify({url,key}));
+  // Save GitHub config
+  const ghUser=document.getElementById('ghUser').value.trim();
+  const ghRepo=document.getElementById('ghRepo').value.trim();
+  const ghToken=document.getElementById('ghToken').value.trim();
+  if(ghUser&&ghRepo&&ghToken){
+    localStorage.setItem(GH_CONFIG_KEY,JSON.stringify({user:ghUser,repo:ghRepo,token:ghToken}));
+  }
   document.getElementById('setupOverlay').style.display='none';init();
 }
 function useLocalMode(){useLocal=true;document.getElementById('setupOverlay').style.display='none';setStatus('local','ローカルモード');loadLocal();}
@@ -539,6 +585,12 @@ function showSetup(){
   const c=JSON.parse(localStorage.getItem(CONFIG_KEY)||'{}');
   if(c.url)document.getElementById('setupUrl').value=c.url;
   if(c.key)document.getElementById('setupKey').value=c.key;
+  try{
+    const g=JSON.parse(localStorage.getItem(GH_CONFIG_KEY)||'{}');
+    if(g.user)document.getElementById('ghUser').value=g.user;
+    if(g.repo)document.getElementById('ghRepo').value=g.repo;
+    if(g.token)document.getElementById('ghToken').value=g.token;
+  }catch(e){}
   document.getElementById('setupOverlay').style.display='flex';
 }
 function setStatus(s,t){
@@ -634,7 +686,6 @@ function selectRef(id){
   document.getElementById('f-checked').checked=!!r.checked;
   updateCheckedUI(r.checked);
   renderPdfViewer(r.pdfUrl);
-  loadBaseUrl();
   renderList();showTab('info');
 }
 
@@ -713,6 +764,7 @@ function showTab(name){
   const tabs=document.querySelectorAll('.tab');
   const i=names.indexOf(name);if(i>=0&&tabs[i])tabs[i].classList.add('active');
   if(name==='export')renderExportCheckboxes();
+  if(name==='pdf')checkGhConfig();
 }
 function showTabGlobal(name){
   if(!currentId&&refs.length>0)selectRef(refs[0].id);else if(!currentId)return;showTab(name);
@@ -726,53 +778,113 @@ function openBulk(){
 }
 
 // ===== PDF =====
-const BASE_URL_KEY='refman_github_base_url';
-
-function loadBaseUrl(){
-  const saved=localStorage.getItem(BASE_URL_KEY)||'';
-  document.getElementById('githubBaseUrl').value=saved;
-  return saved.replace(/\/$/,'');
-}
-function saveBaseUrl(){
-  const url=document.getElementById('githubBaseUrl').value.trim().replace(/\/$/,'');
-  localStorage.setItem(BASE_URL_KEY,url);
-  toast('ベースURLを保存しました');
-  updatePdfUrlPreview();
+function getGhConfig(){
+  try{return JSON.parse(localStorage.getItem(GH_CONFIG_KEY)||'{}');}catch(e){return{};}
 }
 function getBaseUrl(){
-  return (localStorage.getItem(BASE_URL_KEY)||'').replace(/\/$/,'');
+  const g=getGhConfig();
+  if(g.user&&g.repo)return`https://${g.user}.github.io/${g.repo}`;
+  return '';
+}
+function checkGhConfig(){
+  const g=getGhConfig();
+  const ok=!!(g.user&&g.repo&&g.token);
+  const warn=document.getElementById('githubNotConfigured');
+  const area=document.getElementById('uploadArea');
+  if(warn){warn.style.display=ok?'none':'block';}
+  if(area){area.style.opacity=ok?'1':'0.4';area.style.pointerEvents=ok?'':'none';}
+  return ok;
 }
 
-function updatePdfUrlPreview(){
-  const filename=document.getElementById('f-pdf-filename').value.trim();
-  const preview=document.getElementById('pdfUrlPreview');
-  const base=getBaseUrl();
-  if(filename&&base){
-    const full=`${base}/papers/${filename}`;
-    preview.textContent=full;
-    preview.style.display='block';
-  }else if(filename&&!base){
-    preview.textContent='⚠ ベースURLを先に設定してください';
-    preview.style.color='#8b2f2f';
-    preview.style.display='block';
-  }else{
-    preview.style.display='none';
+// Drag & drop support
+document.addEventListener('DOMContentLoaded',()=>{
+  const zone=document.getElementById('uploadZone');
+  if(!zone)return;
+  zone.addEventListener('dragover',e=>{e.preventDefault();zone.classList.add('drag-over');});
+  zone.addEventListener('dragleave',()=>zone.classList.remove('drag-over'));
+  zone.addEventListener('drop',e=>{
+    e.preventDefault();zone.classList.remove('drag-over');
+    const file=e.dataTransfer.files[0];
+    if(file&&file.type==='application/pdf')handleFileSelect(file);
+    else toast('PDFファイルのみアップロードできます');
+  });
+});
+
+async function handleFileSelect(file){
+  if(!file)return;
+  if(file.type!=='application/pdf'){toast('PDFファイルのみアップロードできます');return;}
+  if(!checkGhConfig()){toast('GitHub設定が未完了です。設定ボタンから入力してください。');return;}
+  const g=getGhConfig();
+  const filename=sanitizeFilename(file.name);
+  const path=`papers/${filename}`;
+  const progressWrap=document.getElementById('uploadProgress');
+  const bar=document.getElementById('uploadProgressBar');
+  const text=document.getElementById('uploadProgressText');
+  progressWrap.style.display='block';
+  bar.style.width='10%';
+  text.textContent='ファイルを読み込み中...';
+  try{
+    // Read file as base64
+    const base64=await fileToBase64(file);
+    bar.style.width='40%';
+    text.textContent='GitHubに送信中...';
+    // Check if file already exists (to get SHA for update)
+    let sha=null;
+    try{
+      const check=await fetch(`https://api.github.com/repos/${g.user}/${g.repo}/contents/${path}`,{
+        headers:{'Authorization':`Bearer ${g.token}`,'Accept':'application/vnd.github+json'}
+      });
+      if(check.ok){const d=await check.json();sha=d.sha;}
+    }catch(e){}
+    bar.style.width='60%';
+    const body={message:`Add PDF: ${filename}`,content:base64};
+    if(sha)body.sha=sha;
+    const res=await fetch(`https://api.github.com/repos/${g.user}/${g.repo}/contents/${path}`,{
+      method:'PUT',
+      headers:{'Authorization':`Bearer ${g.token}`,'Accept':'application/vnd.github+json','Content-Type':'application/json'},
+      body:JSON.stringify(body)
+    });
+    if(!res.ok){const e=await res.json();throw new Error(e.message||'Upload failed');}
+    bar.style.width='100%';
+    text.textContent='アップロード完了！';
+    // Set URL
+    const url=`${getBaseUrl()}/papers/${filename}`;
+    document.getElementById('f-pdf-url').value=url;
+    document.getElementById('pdfUrlPreview').textContent=url;
+    document.getElementById('pdfUrlPreview').style.display='block';
+    applyPdfUrl(url);
+    toast(`✓ ${filename} をアップロードしました`);
+    setTimeout(()=>{progressWrap.style.display='none';bar.style.width='0%';},2000);
+    // Reset file input
+    document.getElementById('pdfFileInput').value='';
+  }catch(e){
+    bar.style.width='0%';
+    text.textContent='エラー: '+e.message;
+    toast('アップロード失敗: '+e.message);
+    setTimeout(()=>{progressWrap.style.display='none';},3000);
   }
 }
 
-function savePdfFromFilename(){
-  const filename=document.getElementById('f-pdf-filename').value.trim();
-  const base=getBaseUrl();
-  if(!filename){toast('ファイル名を入力してください');return;}
-  if(!base){toast('先にベースURLを設定してください');return;}
-  const url=`${base}/papers/${filename}`;
-  document.getElementById('f-pdf-url').value=url;
-  applyPdfUrl(url);
+function fileToBase64(file){
+  return new Promise((resolve,reject)=>{
+    const reader=new FileReader();
+    reader.onload=()=>resolve(reader.result.split(',')[1]);
+    reader.onerror=reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+function sanitizeFilename(name){
+  return name.replace(/[^a-zA-Z0-9._\-぀-ヿ一-鿿]/g,'_');
 }
 
 function savePdfUrl(){
   const url=document.getElementById('f-pdf-url').value.trim();
   applyPdfUrl(url);
+}
+
+function updatePdfUrlPreview(){
+  // kept for compat - no-op now
 }
 
 function applyPdfUrl(url){
